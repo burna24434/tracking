@@ -1,88 +1,143 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Global Express Tracking</title>
+<title>TE MOVERS | Shipment Tracking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body {
     margin:0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+    background: url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=80") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.overlay {
+    background: rgba(0,0,0,0.75);
+    min-height: 100vh;
+    color: white;
+}
+
+header {
+    padding: 20px 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin:0;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+nav a {
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+}
+
+.section {
+    padding: 60px 10%;
+    text-align:center;
 }
 
 .card {
     background:white;
-    width:95%;
+    color:black;
     max-width:600px;
-    padding:40px;
-    border-radius:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-
-h2 {
-    text-align:center;
-    margin-bottom:20px;
+    margin:30px auto;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
 input {
     width:100%;
-    padding:14px;
-    margin-top:10px;
-    border-radius:8px;
+    padding:12px;
+    margin-top:15px;
+    border-radius:6px;
     border:1px solid #ccc;
-    font-size:16px;
 }
 
 button {
     width:100%;
-    padding:14px;
+    padding:12px;
     margin-top:15px;
     border:none;
-    background:#1e3c72;
+    background:#004aad;
     color:white;
     font-size:16px;
-    border-radius:8px;
+    border-radius:6px;
     cursor:pointer;
 }
 
 button:hover {
-    background:#16325c;
+    background:#003380;
 }
 
 .status {
-    margin-top:25px;
-}
-
-.step {
-    padding:10px 0;
-    border-left:3px solid #ccc;
-    padding-left:10px;
+    margin-top:20px;
+    text-align:left;
 }
 
 .active {
-    border-color:green;
-    font-weight:bold;
     color:green;
+    font-weight:bold;
+}
+
+footer {
+    background:#111;
+    text-align:center;
+    padding:20px;
+    font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-<h2>Global Express Tracking</h2>
+<div class="overlay">
 
+<header>
+<h1>TE MOVERS</h1>
+<nav>
+<a href="#tracking">Track</a>
+<a href="#about">About</a>
+<a href="#contact">Contact</a>
+</nav>
+</header>
+
+<section class="section" id="tracking">
+<h2>Track Your Shipment</h2>
+
+<div class="card">
 <input type="text" id="trackingInput" placeholder="Enter Tracking Number">
 <button onclick="track()">Track Shipment</button>
-
 <div class="status" id="result"></div>
+</div>
+</section>
+
+<section class="section" id="about">
+<h2>About TE MOVERS</h2>
+<p>
+TE MOVERS is a professional logistics and relocation service provider committed to secure, efficient, and timely delivery of goods. 
+We specialize in handling residential moves, commercial shipments, and high-value freight with precision and care. 
+Our mission is to provide dependable transportation solutions backed by structured tracking systems and dedicated customer service.
+</p>
+</section>
+
+<section class="section" id="contact">
+<h2>Contact Us</h2>
+<p><strong>Customer Service:</strong> customerservice@temovers.space</p>
+<p><strong>Contact Person:</strong> Robert Powell</p>
+</section>
+
+<footer>
+© 2026 TE MOVERS. All Rights Reserved.
+</footer>
+
 </div>
 
 <script>
@@ -109,9 +164,9 @@ function track() {
 
     steps.forEach((step, index) => {
       if(index <= shipment.status) {
-        html += `<div class="step active">✔ ${step}</div>`;
+        html += `<div class="active">✔ ${step}</div>`;
       } else {
-        html += `<div class="step">${step}</div>`;
+        html += `<div>${step}</div>`;
       }
     });
 
