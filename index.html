@@ -2,131 +2,73 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TE LOGISTICS MOVERS | Elite Global Logistics</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TE LOGISTICS MOVERS | Premium Tracking</title>
+
+<!-- Google font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif}
 
 body{
-  margin:0;
-  font-family:"Segoe UI",Arial,sans-serif;
-  background:url("https://images.unsplash.com/photo-1605902711622-cfb43c44367f?auto=format&fit=crop&w=1900&q=80") no-repeat center center fixed;
-  background-size:cover;
+background:url('https://images.unsplash.com/photo-1581093458791-9d0c52f99f90?auto=format&fit=crop&w=1900&q=80') no-repeat center center fixed;
+background-size:cover;
+color:#fff;
 }
 
-.overlay{
-  background:linear-gradient(180deg,rgba(5,10,20,0.95),rgba(2,5,15,0.99));
-  min-height:100vh;
-  color:white;
-}
+.overlay{background:rgba(10,10,20,.85);min-height:100vh}
 
 header{
-  padding:25px 8%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+display:flex;align-items:center;justify-content:space-between;padding:20px 8%;
+backdrop-filter:blur(10px);
 }
 
-.logo{
-  font-size:46px;
-  font-weight:900;
-  letter-spacing:6px;
-  background:linear-gradient(90deg,#00eaff,#2979ff,#7c4dff);
-  -webkit-background-clip:text;
-  color:transparent;
-}
+.logo{display:flex;align-items:center;gap:12px}
 
-nav a{
-  color:white;
-  margin-left:30px;
-  text-decoration:none;
-}
+.logo img{width:55px}
 
-.section{
-  padding:90px 10%;
-  text-align:center;
-}
+.logo h1{font-size:28px;letter-spacing:2px;font-weight:700}
+
+nav a{margin-left:25px;color:#fff;text-decoration:none;font-weight:500}
+
+.hero{padding:90px 8%;text-align:center}
+.hero h2{font-size:40px;font-weight:700;margin-bottom:15px}
+.hero p{opacity:.8}
 
 .card{
-  background:rgba(255,255,255,0.97);
-  color:black;
-  max-width:1200px;
-  margin:30px auto;
-  padding:50px;
-  border-radius:24px;
-  box-shadow:0 60px 120px rgba(0,0,0,0.7);
+max-width:850px;margin:40px auto;background:rgba(255,255,255,.08);
+padding:35px;border-radius:20px;backdrop-filter:blur(25px);
+box-shadow:0 10px 50px rgba(0,0,0,.5)
 }
 
-input,textarea,select{
-  width:100%;
-  padding:16px;
-  margin-top:12px;
-  border-radius:12px;
-  border:1px solid #ddd;
+input,select{
+width:100%;padding:14px;border:none;border-radius:8px;margin-top:15px
 }
 
 button{
-  width:100%;
-  padding:16px;
-  margin-top:15px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(90deg,#00eaff,#2979ff);
-  color:white;
-  font-size:18px;
-  cursor:pointer;
+width:100%;padding:14px;margin-top:15px;border:none;border-radius:8px;
+background:linear-gradient(45deg,#0066ff,#00c6ff);
+color:#fff;font-weight:600;cursor:pointer
 }
 
-button:hover{opacity:0.9;}
+.section{padding:70px 8%}
 
-.timeline{
-  margin-top:40px;
-  border-left:5px solid #2979ff;
-  padding-left:25px;
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px}
 
-.step{
-  background:#f4f7fc;
-  margin-bottom:25px;
-  padding:22px;
-  border-radius:16px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.15);
-}
+.about-img{width:100%;border-radius:18px}
 
-.active{
-  border-left:8px solid #00c853;
-  background:#e8f5e9;
-}
+.director{display:flex;gap:20px;align-items:center}
 
-.dashboard{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:20px;
-  margin-bottom:30px;
-}
+.director img{width:130px;border-radius:50%}
 
-.stat{
-  background:#eef3ff;
-  padding:25px;
-  border-radius:16px;
-  font-weight:600;
-}
+.timeline div{padding:10px 0;border-left:2px solid #00c6ff;margin-left:10px;padding-left:15px}
 
-.profile img{
-  width:130px;
-  height:130px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 15px 40px rgba(0,0,0,0.5);
-}
+.active{color:#00ffae;font-weight:600}
 
-.hidden{display:none;}
+footer{padding:30px;text-align:center;background:#000}
 
-footer{
-  background:#020617;
-  padding:30px;
-  text-align:center;
-}
+.admin{display:none}
 
 </style>
 </head>
@@ -135,177 +77,155 @@ footer{
 <div class="overlay">
 
 <header>
-<div class="logo">TE LOGISTICS MOVERS</div>
+<div class="logo">
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png">
+<h1>TE LOGISTICS MOVERS</h1>
+</div>
+
 <nav>
-<a href="#tracking">Track</a>
+<a href="#track">Track</a>
+<a href="#about">Company</a>
+<a href="#contact">Contact</a>
+<a href="#admin">Admin</a>
 </nav>
 </header>
 
-<section class="section" id="tracking">
-<h2>Elite Global Shipment Intelligence</h2>
+<section class="hero">
+<h2>Ultra Premium Global Logistics</h2>
+<p>Secure • Fast • Corporate Shipment Monitoring</p>
+</section>
 
-<div class="card">
-<input id="trackingInput" placeholder="Enter Tracking Number">
-<button onclick="track()">Track Shipment</button>
+<section id="track" class="card">
+<h2>Track Shipment</h2>
+<input id="trackInput" placeholder="Enter tracking number">
+<button onclick="track()">Track Now</button>
+
 <div id="result"></div>
+</section>
+
+<section id="about" class="section">
+<div class="grid">
+<div>
+<h2>About Our Company</h2>
+<p>
+TE Logistics Movers is a luxury international freight and relocation company providing secure global shipping solutions. We operate advanced shipment monitoring, high-value cargo protection, corporate transport, and executive logistics services. Our network connects warehouses worldwide.
+</p>
+</div>
+
+<div>
+<img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
+</div>
+</div>
+
+<br><br>
+
+<div class="director">
+<img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
+<div>
+<h3>Roberto Powell</h3>
+<p>Senior Executive Director</p>
+</div>
 </div>
 </section>
 
-<!-- SECRET ADMIN LOGIN -->
-<section class="section hidden" id="secureAdmin">
+<section id="contact" class="section">
+<h2>Contact Information</h2>
+<p>Email: customerservice@telogisticsmovers.com</p>
+<p>Head Office: Global Cargo Center, New York, USA</p>
+</section>
+
+<section id="admin" class="section">
+<h2>Admin Portal</h2>
 
 <div class="card">
-<h2>Secure Executive Access</h2>
-<input id="adminUser" placeholder="Executive ID">
-<input id="adminPass" placeholder="Password" type="password">
-<button onclick="loginAdmin()">Authenticate</button>
-
-<div id="adminPanel" class="hidden">
-
-<div style="text-align:center">
-<img src="https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=300&q=80">
-<h3>Robert Powell</h3>
-<p>Chief Global Logistics Officer</p>
+<input id="adminPass" placeholder="Admin password">
+<button onclick="login()">Login</button>
 </div>
 
-<div class="dashboard">
-<div class="stat">Total Shipments<br><span id="total"></span></div>
-</div>
-
+<div id="adminPanel" class="admin">
 <h3>Create Shipment</h3>
-<button onclick="generateTracking()">Generate Tracking Number</button>
-<input id="trk" placeholder="Tracking Number">
-<input id="receiver" placeholder="Receiver Name">
-<input id="sender" placeholder="Sender Name">
-<input id="origin" placeholder="Origin">
-<input id="destination" placeholder="Destination">
 
-<h3>Movement Update</h3>
-<input id="location" placeholder="Location">
-<input id="date" placeholder="Date">
-<input id="time" placeholder="Time">
-<select id="stage">
+<input id="receiver" placeholder="Receiver name">
+<input id="address" placeholder="Address">
+<input id="city" placeholder="City">
+<input id="state" placeholder="State">
+<input id="zip" placeholder="Zip code">
+<input id="date" placeholder="Delivery date">
+<input id="time" placeholder="Current time">
+<select id="status">
 <option>Shipment Created</option>
 <option>Processing</option>
 <option>In Transit</option>
-<option>Customs Clearance</option>
-<option>Warehouse Scan</option>
 <option>Out for Delivery</option>
 <option>Delivered</option>
 </select>
-<textarea id="note" placeholder="Executive status"></textarea>
 
-<button onclick="saveShipment()">Save Shipment</button>
+<button onclick="createShipment()">Generate Tracking</button>
 
-<h3>Delete</h3>
-<input id="deleteTrk" placeholder="Tracking">
-<button onclick="deleteShipment()">Delete</button>
-
+<h4 id="generated"></h4>
 </div>
-</div>
-
 </section>
 
 <footer>
-© 2026 TE LOGISTICS MOVERS | Elite Global Freight
+© 2026 TE Logistics Movers. Premium Global Logistics.
 </footer>
 
 </div>
 
 <script>
+let db = JSON.parse(localStorage.getItem('shipments')||'{}');
 
-let shipments = JSON.parse(localStorage.getItem("shipments")) || {};
-
-// SECRET ACCESS: press CTRL + ALT + L
-window.addEventListener("keydown", function(e){
-  if(e.ctrlKey && e.altKey && e.key === "l"){
-    document.getElementById("secureAdmin").classList.remove("hidden");
-    window.scrollTo(0, document.body.scrollHeight);
-  }
-});
-
-function loginAdmin(){
-  const u = document.getElementById("adminUser").value;
-  const p = document.getElementById("adminPass").value;
-
-  if(u === "executive" && p === "UltraSecure2026"){
-    document.getElementById("adminPanel").classList.remove("hidden");
-    document.getElementById("total").innerText = Object.keys(shipments).length;
-  }else alert("Authentication failed");
+function randomTracking(){
+return 'TL'+Math.floor(Math.random()*99999999);
 }
 
-function generateTracking(){
-  const rand = Math.floor(100000 + Math.random()*900000);
-  document.getElementById("trk").value = "TLX" + rand;
+function login(){
+if(document.getElementById('adminPass').value==='admin123'){
+document.getElementById('adminPanel').style.display='block';
+}
 }
 
-function saveShipment(){
+function createShipment(){
+let id=randomTracking();
 
-  const trk = document.getElementById("trk").value;
+db[id]={
+receiver:receiver.value,
+address:address.value,
+city:city.value,
+state:state.value,
+zip:zip.value,
+date:date.value,
+time:time.value,
+status:status.selectedIndex
+};
 
-  if(!shipments[trk]){
-    shipments[trk] = {
-      receiver: document.getElementById("receiver").value,
-      sender: document.getElementById("sender").value,
-      origin: document.getElementById("origin").value,
-      destination: document.getElementById("destination").value,
-      history:[]
-    };
-  }
+localStorage.setItem('shipments',JSON.stringify(db));
 
-  shipments[trk].history.push({
-    location: document.getElementById("location").value,
-    date: document.getElementById("date").value,
-    time: document.getElementById("time").value,
-    stage: document.getElementById("stage").value,
-    note: document.getElementById("note").value
-  });
-
-  localStorage.setItem("shipments",JSON.stringify(shipments));
-  alert("Shipment intelligence saved");
-}
-
-function deleteShipment(){
-  const trk = document.getElementById("deleteTrk").value;
-  delete shipments[trk];
-  localStorage.setItem("shipments",JSON.stringify(shipments));
+document.getElementById('generated').innerText='Tracking: '+id;
 }
 
 function track(){
+let id=document.getElementById('trackInput').value;
+let r=db[id];
 
-  const trk = document.getElementById("trackingInput").value;
-  const result = document.getElementById("result");
+if(!r){document.getElementById('result').innerHTML='Not found';return}
 
-  if(shipments[trk]){
+let steps=[
+'Shipment Created','Processing','In Transit','Out for Delivery','Delivered'
+];
 
-    const s = shipments[trk];
+let html='<h3>'+r.receiver+'</h3>';
+html+='Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
+html+='Date: '+r.date+' | Time: '+r.time+'<br><br>';
 
-    let html = `
-    <h2>${trk}</h2>
-    <p><b>Sender:</b> ${s.sender}</p>
-    <p><b>Receiver:</b> ${s.receiver}</p>
-    <p><b>Route:</b> ${s.origin} ➜ ${s.destination}</p>
-    `;
+steps.forEach((s,i)=>{
+html+=`<div class='${i<=r.status?'active':''}'>${s}</div>`;
+});
 
-    html += '<div class="timeline">';
-
-    s.history.slice().reverse().forEach((h,index)=>{
-      html += `<div class="step ${index===0?'active':''}">
-      <b>${h.stage}</b><br>
-      ${h.location}<br>
-      ${h.note}<br>
-      <small>${h.date} | ${h.time}</small>
-      </div>`;
-    });
-
-    html += '</div>';
-
-    result.innerHTML = html;
-
-  }else result.innerHTML = "Tracking number not found";
+document.getElementById('result').innerHTML=html;
 }
-
 </script>
 
 </body>
 </html>
+
