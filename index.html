@@ -1,184 +1,283 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>TE MOVERS | Shipment Tracking</title>
+<title>TE LOGISTICS MOVERS | Ultra Luxury Global Tracking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body {
-    margin:0;
-    font-family: Arial, sans-serif;
-    background: url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=80") no-repeat center center fixed;
-    background-size: cover;
+
+body{
+  margin:0;
+  font-family:"Segoe UI",Arial,sans-serif;
+  background:url("https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1800&q=80") no-repeat center center fixed;
+  background-size:cover;
 }
 
-.overlay {
-    background: rgba(0,0,0,0.75);
-    min-height: 100vh;
-    color: white;
+.overlay{
+  background:linear-gradient(180deg,rgba(0,0,0,0.9),rgba(5,10,20,0.98));
+  min-height:100vh;
+  color:white;
 }
 
-header {
-    padding: 20px 10%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+header{
+  padding:25px 8%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-header h1 {
-    margin:0;
-    font-size: 24px;
-    letter-spacing: 2px;
+.logo{
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:5px;
+  background:linear-gradient(90deg,#00eaff,#2979ff,#7c4dff);
+  -webkit-background-clip:text;
+  color:transparent;
 }
 
-nav a {
-    color:white;
-    text-decoration:none;
-    margin-left:20px;
+nav a{
+  color:white;
+  margin-left:25px;
+  text-decoration:none;
+  font-weight:500;
 }
 
-.section {
-    padding: 60px 10%;
-    text-align:center;
+.section{
+  padding:80px 10%;
+  text-align:center;
 }
 
-.card {
-    background:white;
-    color:black;
-    max-width:600px;
-    margin:30px auto;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+.card{
+  background:rgba(255,255,255,0.97);
+  color:black;
+  max-width:1000px;
+  margin:30px auto;
+  padding:40px;
+  border-radius:18px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.6);
 }
 
-input {
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border-radius:6px;
-    border:1px solid #ccc;
+input,textarea,select{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:15px;
 }
 
-button {
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    background:#004aad;
-    color:white;
-    font-size:16px;
-    border-radius:6px;
-    cursor:pointer;
+button{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,#00eaff,#2979ff);
+  color:white;
+  font-size:17px;
+  cursor:pointer;
 }
 
-button:hover {
-    background:#003380;
+button:hover{opacity:0.92;}
+
+.timeline{
+  margin-top:30px;
+  border-left:4px solid #2979ff;
+  padding-left:20px;
 }
 
-.status {
-    margin-top:20px;
-    text-align:left;
+.step{
+  background:#f4f7fc;
+  margin-bottom:20px;
+  padding:18px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
 }
 
-.active {
-    color:green;
-    font-weight:bold;
+.active{
+  border-left:7px solid #00c853;
+  background:#e8f5e9;
 }
 
-footer {
-    background:#111;
-    text-align:center;
-    padding:20px;
-    font-size:14px;
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-bottom:20px;
 }
+
+.stat{
+  background:#eef3ff;
+  padding:20px;
+  border-radius:12px;
+  font-weight:600;
+}
+
+.admin{display:none;}
+
+footer{
+  background:#060b18;
+  padding:25px;
+  text-align:center;
+  font-size:14px;
+}
+
 </style>
 </head>
 
 <body>
-
 <div class="overlay">
 
 <header>
-<h1>TE MOVERS</h1>
+<div class="logo">TE LOGISTICS MOVERS</div>
 <nav>
 <a href="#tracking">Track</a>
-<a href="#about">About</a>
-<a href="#contact">Contact</a>
+<a href="#admin">Admin</a>
 </nav>
 </header>
 
 <section class="section" id="tracking">
-<h2>Track Your Shipment</h2>
+<h2>Ultra Luxury Global Shipment Tracking</h2>
 
 <div class="card">
-<input type="text" id="trackingInput" placeholder="Enter Tracking Number">
+<input id="trackingInput" placeholder="Enter Tracking Number">
 <button onclick="track()">Track Shipment</button>
-<div class="status" id="result"></div>
+<div id="result"></div>
 </div>
 </section>
 
-<section class="section" id="about">
-<h2>About TE MOVERS</h2>
-<p>
-TE MOVERS is a professional logistics and relocation service provider committed to secure, efficient, and timely delivery of goods. 
-We specialize in handling residential moves, commercial shipments, and high-value freight with precision and care. 
-Our mission is to provide dependable transportation solutions backed by structured tracking systems and dedicated customer service.
-</p>
-</section>
+<section class="section admin" id="admin">
+<h2>Ultra Admin Control Center</h2>
 
-<section class="section" id="contact">
-<h2>Contact Us</h2>
-<p><strong>Customer Service:</strong> customerservice@temovers.space</p>
-<p><strong>Contact Person:</strong> Robert Powell</p>
+<div class="card">
+<input id="adminCode" placeholder="Secure Admin Password">
+<button onclick="loginAdmin()">Login</button>
+
+<div id="adminPanel" style="display:none;">
+
+<div class="dashboard">
+<div class="stat">Total Shipments<br><span id="total"></span></div>
+</div>
+
+<h3>Create or Update Shipment</h3>
+<input id="trk" placeholder="Tracking Number">
+<input id="receiver" placeholder="Receiver Name">
+<input id="sender" placeholder="Sender Name">
+<input id="origin" placeholder="Origin Country">
+<input id="destination" placeholder="Destination Country">
+
+<h3>Add Movement Update</h3>
+<input id="location" placeholder="Current Location">
+<input id="date" placeholder="Date">
+<input id="time" placeholder="Time">
+<select id="stage">
+<option>Shipment Created</option>
+<option>Processing</option>
+<option>In Transit</option>
+<option>Customs Clearance</option>
+<option>Out for Delivery</option>
+<option>Delivered</option>
+</select>
+<textarea id="note" placeholder="Luxury status note"></textarea>
+
+<button onclick="addUpdate()">Add Update</button>
+
+<h3>Delete Shipment</h3>
+<input id="deleteTrk" placeholder="Tracking Number">
+<button onclick="deleteShipment()">Delete</button>
+
+</div>
+</div>
 </section>
 
 <footer>
-© 2026 TE MOVERS. All Rights Reserved.
+© 2026 TE LOGISTICS MOVERS | Global Freight & Secure Logistics
 </footer>
 
 </div>
 
 <script>
-const shipments = {
-  "TRK001": { status: 2, delivery: "February 19, 2026" }
-};
 
-function track() {
-  const input = document.getElementById("trackingInput").value;
+let shipments = JSON.parse(localStorage.getItem("shipments")) || {};
+
+function loginAdmin(){
+  if(document.getElementById("adminCode").value === "admin123"){
+    document.getElementById("adminPanel").style.display="block";
+    document.getElementById("total").innerText = Object.keys(shipments).length;
+  }else alert("Access denied");
+}
+
+function addUpdate(){
+
+  const trk = document.getElementById("trk").value;
+
+  if(!shipments[trk]){
+    shipments[trk] = {
+      receiver: document.getElementById("receiver").value,
+      sender: document.getElementById("sender").value,
+      origin: document.getElementById("origin").value,
+      destination: document.getElementById("destination").value,
+      history:[]
+    };
+  }
+
+  shipments[trk].history.push({
+    location: document.getElementById("location").value,
+    date: document.getElementById("date").value,
+    time: document.getElementById("time").value,
+    stage: document.getElementById("stage").value,
+    note: document.getElementById("note").value
+  });
+
+  localStorage.setItem("shipments",JSON.stringify(shipments));
+  alert("Luxury update added");
+}
+
+function deleteShipment(){
+  const trk = document.getElementById("deleteTrk").value;
+  delete shipments[trk];
+  localStorage.setItem("shipments",JSON.stringify(shipments));
+  alert("Shipment deleted");
+}
+
+function track(){
+
+  const trk = document.getElementById("trackingInput").value;
   const result = document.getElementById("result");
 
-  if(shipments[input]) {
-    const shipment = shipments[input];
+  if(shipments[trk]){
 
-    const steps = [
-      "Shipment Created",
-      "Processing",
-      "In Transit",
-      "Out for Delivery",
-      "Delivered"
-    ];
+    const s = shipments[trk];
 
-    let html = "<h3>Tracking Details</h3>";
+    let html = `
+    <h2>${trk}</h2>
+    <p><b>Sender:</b> ${s.sender}</p>
+    <p><b>Receiver:</b> ${s.receiver}</p>
+    <p><b>Route:</b> ${s.origin} ➜ ${s.destination}</p>
+    `;
 
-    steps.forEach((step, index) => {
-      if(index <= shipment.status) {
-        html += `<div class="active">✔ ${step}</div>`;
-      } else {
-        html += `<div>${step}</div>`;
-      }
+    html += '<div class="timeline">';
+
+    s.history.slice().reverse().forEach((h,index)=>{
+      html += `<div class="step ${index===0?'active':''}">
+      <b>${h.stage}</b><br>
+      ${h.location}<br>
+      ${h.note}<br>
+      <small>${h.date} | ${h.time}</small>
+      </div>`;
     });
 
-    html += `<br><strong>Estimated Delivery:</strong> ${shipment.delivery}`;
+    html += '</div>';
+
     result.innerHTML = html;
 
-  } else {
-    result.innerHTML = "<strong>Tracking number not found.</strong>";
+  }else{
+    result.innerHTML="Tracking number not found";
   }
 }
+
 </script>
 
 </body>
 </html>
-
