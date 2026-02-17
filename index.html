@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Shipment Tracking</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    text-align: center;
+    padding: 50px;
+}
+
+.container {
+    background: white;
+    max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+input {
+    width: 80%;
+    padding: 12px;
+    margin-top: 15px;
+}
+
+button {
+    padding: 12px 25px;
+    margin-top: 15px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.status-box {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.status-step {
+    padding: 10px 0;
+}
+
+.active {
+    color: green;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Track Your Shipment</h2>
+<input type="text" id="trackingInput" placeholder="Enter Tracking Number">
+<br>
+<button onclick="trackPackage()">Track</button>
+
+<div class="status-box" id="result"></div>
+</div>
+
+<script>
+
+const shipments = {
+  "TRK001": {
+    status: 2,
+    delivery: "February 19, 2026"
+  }
+};
+
+function trackPackage() {
+  const input = document.getElementById("trackingInput").value;
+  const result = document.getElementById("result");
+
+  if(shipments[input]) {
+    const shipment = shipments[input];
+
+    const steps = [
+      "Order Received",
+      "Processing",
+      "In Transit",
+      "Out for Delivery",
+      "Delivered"
+    ];
+
+    let html = "<h3>Shipment Status</h3>";
+
+    steps.forEach((step, index) => {
+      if(index <= shipment.status) {
+        html += `<div class="status-step active">✔ ${step}</div>`;
+      } else {
+        html += `<div class="status-step">${step}</div>`;
+      }
+    });
+
+    html += `<br><strong>Estimated Delivery:</strong> ${shipment.delivery}`;
+
+    result.innerHTML = html;
+
+  } else {
+    result.innerHTML = "<strong>Tracking number not found.</strong>";
+  }
+}
+
+</script>
+
+</body>
+</html>
