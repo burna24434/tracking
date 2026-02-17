@@ -117,56 +117,70 @@ TE Logistics Movers is a luxury international logistics and relocation provider 
 
 </div>
 
-<script>
-let db = JSON.parse(localStorage.getItem('shipments')||'{}');
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
+  authDomain: "te-logistics-movers.firebaseapp.com",
+  projectId: "te-logistics-movers",
+  storageBucket: "te-logistics-movers.firebasestorage.app",
+  messagingSenderId: "1076872105452",
+  appId: "1:1076872105452:web:919c3f363dfebd896c84c9",
+  measurementId: "G-GPVKBW8D8D"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app);
 
 function track(){
-let id=document.getElementById('trackInput').value;
-let r=db[id];
+  let id = document.getElementById('trackInput').value;
+  get(ref(db,'shipments/'+id)).then(snapshot=>{
+    if(!snapshot.exists()){
+      document.getElementById('result').innerHTML='Tracking not found';
+      return;
+    }
+    const r = snapshot.val();
+    const steps = [
+      'Shipment Created',
+      'Processing',
+      'Pending Insurance',
+      'In Transit',
+      'Out for Delivery',
+      'Delivered'
+    ];
+    let html = '<h2>'+r.receiver+'</h2>';
+    html+='Current Location: '+r.location+'<br>';
+    html+='Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
+    html+='Updated: '+r.date+' '+r.time;
 
-if(!r){
-document.getElementById('result').innerHTML='Tracking not found';
-return;
-}
-
-let steps=[
-'Shipment Created',
-'Processing',
-'Pending Insurance',
-'In Transit',
-'Out for Delivery',
-'Delivered'
-];
-
-let html='<h2>'+r.receiver+'</h2>';
-html+='Current Location: '+r.location+'<br>';
-html+='Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
-html+='Updated: '+r.date+' '+r.time;
-
-html+='<div class="timeline">';
-
-steps.forEach((s,i)=>{
-
-if(i < r.status){
-html+="<div class='active'>✔ "+s+"</div>";
-}
-else if(i === r.status && s === 'Pending Insurance'){
-html+="<div class='pending'>⚠ "+s+"</div>";
-}
-else if(i === r.status){
-html+="<div class='active'>✔ "+s+"</div>";
-}
-else{
-html+="<div>"+s+"</div>";
-}
-
-});
-
-html+='</div>';
-
-document.getElementById('result').innerHTML=html;
+    html+='<div class="timeline">';
+    steps.forEach((s,i)=>{
+      if(i < r.status){
+        html+="<div class='active'>✔ "+s+"</div>";
+      }
+      else if(i===r.status && s==='Pending Insurance'){
+        html+="<div class='pending'>⚠ "+s+"</div>";
+      }
+      else if(i===r.status){
+        html+="<div class='active'>✔ "+s+"</div>";
+      }
+      else{
+        html+="<div>"+s+"</div>";
+      }
+    });
+    html+='</div>';
+    document.getElementById('result').innerHTML = html;
+  });
 }
 </script>
 
 </body>
 </html>
+
