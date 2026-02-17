@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Secure Admin | TE Logistics Movers</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-
 <style>
 body{font-family:Poppins;background:#0c1020;color:#fff;padding:40px}
 .card{max-width:700px;margin:auto;background:#121a33;padding:30px;border-radius:15px}
@@ -14,7 +13,6 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 </head>
 
 <body>
-
 <div class="card" id="login">
 <h2>Secure Hidden Admin</h2>
 <input id="pass" placeholder="Password">
@@ -44,47 +42,58 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 </select>
 
 <button onclick="save()">Save Shipment</button>
-
 <h3 id="msg"></h3>
 </div>
 
-<script>
-let db = JSON.parse(localStorage.getItem('shipments') || '{}');
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
-function login(){
-let password = document.getElementById('pass').value;
-
-if(password === 'admin123'){
-document.getElementById('login').style.display = 'none';
-document.getElementById('panel').style.display = 'block';
-} else {
-alert('Incorrect password');
-}
-}
-
-function random(){
-return 'TL' + Math.floor(Math.random() * 999999999);
-}
-
-function save(){
-let id = document.getElementById('trackId').value || random();
-
-db[id] = {
-receiver: document.getElementById('receiver').value,
-location: document.getElementById('location').value,
-address: document.getElementById('address').value,
-city: document.getElementById('city').value,
-state: document.getElementById('state').value,
-zip: document.getElementById('zip').value,
-status: document.getElementById('status').selectedIndex,
-date: document.getElementById('date').value,
-time: document.getElementById('time').value
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
+  authDomain: "te-logistics-movers.firebaseapp.com",
+  projectId: "te-logistics-movers",
+  storageBucket: "te-logistics-movers.firebasestorage.app",
+  messagingSenderId: "1076872105452",
+  appId: "1:1076872105452:web:919c3f363dfebd896c84c9",
+  measurementId: "G-GPVKBW8D8D"
 };
 
-localStorage.setItem('shipments', JSON.stringify(db));
-document.getElementById('msg').innerText = 'Saved Tracking: ' + id;
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+function login(){
+  const password = document.getElementById('pass').value;
+  if(password==='admin123'){
+    document.getElementById('login').style.display='none';
+    document.getElementById('panel').style.display='block';
+  } else { alert('Incorrect password'); }
+}
+
+function random(){ return 'TL'+Math.floor(Math.random()*999999999); }
+
+function save(){
+  const id = document.getElementById('trackId').value || random();
+  const shipment = {
+    receiver: document.getElementById('receiver').value,
+    location: document.getElementById('location').value,
+    address: document.getElementById('address').value,
+    city: document.getElementById('city').value,
+    state: document.getElementById('state').value,
+    zip: document.getElementById('zip').value,
+    status: document.getElementById('status').selectedIndex,
+    date: document.getElementById('date').value,
+    time: document.getElementById('time').value
+  };
+  set(ref(db,'shipments/'+id), shipment).then(()=>{
+    document.getElementById('msg').innerText='Saved Tracking: '+id;
+  });
 }
 </script>
-
 </body>
 </html>
