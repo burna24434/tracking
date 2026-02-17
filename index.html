@@ -51,9 +51,9 @@ button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;bac
 .timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
 
 .active{color:#00ffae;font-weight:600}
+.pending{color:#ffd000;font-weight:600}
 
 footer{text-align:center;padding:30px;background:#000}
-
 </style>
 </head>
 
@@ -78,7 +78,6 @@ footer{text-align:center;padding:30px;background:#000}
 <h2>Track Your Shipment</h2>
 <input id="trackInput" placeholder="Enter tracking number">
 <button onclick="track()">Track Shipment</button>
-
 <div id="result"></div>
 </section>
 
@@ -125,9 +124,19 @@ function track(){
 let id=document.getElementById('trackInput').value;
 let r=db[id];
 
-if(!r){document.getElementById('result').innerHTML='Tracking not found';return}
+if(!r){
+document.getElementById('result').innerHTML='Tracking not found';
+return;
+}
 
-let steps=['Shipment Created','Processing','In Transit','Out for Delivery','Delivered'];
+let steps=[
+'Shipment Created',
+'Processing',
+'Pending Insurance',
+'In Transit',
+'Out for Delivery',
+'Delivered'
+];
 
 let html='<h2>'+r.receiver+'</h2>';
 html+='Current Location: '+r.location+'<br>';
@@ -137,7 +146,20 @@ html+='Updated: '+r.date+' '+r.time;
 html+='<div class="timeline">';
 
 steps.forEach((s,i)=>{
-html+=`<div class='${i<=r.status?'active':''}'>✔ ${s}</div>`;
+
+if(i < r.status){
+html+="<div class='active'>✔ "+s+"</div>";
+}
+else if(i === r.status && s === 'Pending Insurance'){
+html+="<div class='pending'>⚠ "+s+"</div>";
+}
+else if(i === r.status){
+html+="<div class='active'>✔ "+s+"</div>";
+}
+else{
+html+="<div>"+s+"</div>";
+}
+
 });
 
 html+='</div>';
