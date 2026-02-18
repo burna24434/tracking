@@ -135,9 +135,10 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase(app);
 
-document.getElementById('trackBtn').addEventListener('click', ()=>{
+document.getElementById('trackBtn').addEventListener('click', async ()=>{
   const id = document.getElementById('trackInput').value.trim();
-  get(ref(db,'shipments/'+id)).then(snapshot=>{
+  try {
+    const snapshot = await get(ref(db,'shipments/'+id));
     if(!snapshot.exists()){
       document.getElementById('result').innerHTML='Tracking not found';
       return;
@@ -169,7 +170,9 @@ document.getElementById('trackBtn').addEventListener('click', ()=>{
     });
     html += '</div>';
     document.getElementById('result').innerHTML = html;
-  });
+  } catch(err){
+    alert('Error reading shipment: '+err.message);
+  }
 });
 </script>
 
