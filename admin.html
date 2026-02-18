@@ -43,14 +43,16 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 </select>
 
 <button id="saveBtn">Save Shipment</button>
+
 <h3 id="msg"></h3>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
   authDomain: "te-logistics-movers.firebaseapp.com",
@@ -61,6 +63,7 @@ const firebaseConfig = {
   measurementId: "G-GPVKBW8D8D"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase(app);
@@ -68,18 +71,18 @@ const db = getDatabase(app);
 // Login
 document.getElementById('loginBtn').addEventListener('click', () => {
   const password = document.getElementById('pass').value;
-  if(password==='admin123'){
-    document.getElementById('login').style.display='none';
-    document.getElementById('panel').style.display='block';
+  if(password === 'admin123'){
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
   } else {
     alert('Incorrect password');
   }
 });
 
-// Save / Update shipment
+// Save / Auto-generate tracking number
 document.getElementById('saveBtn').addEventListener('click', ()=>{
   let id = document.getElementById('trackId').value.trim();
-  if(!id) id = 'TL'+Math.floor(Math.random()*999999999); // auto-generate if blank
+  if(!id) id = 'TL'+Math.floor(Math.random()*999999999); // <-- Auto-generate if blank
 
   const shipment = {
     receiver: document.getElementById('receiver').value,
@@ -95,7 +98,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
 
   set(ref(db,'shipments/'+id), shipment).then(()=>{
     document.getElementById('msg').innerText='Saved Tracking: '+id;
-    document.querySelectorAll('#panel input').forEach(input=>input.value='');
+    document.querySelectorAll('#panel input').forEach(input => input.value=''); // Clear form
   });
 });
 </script>
