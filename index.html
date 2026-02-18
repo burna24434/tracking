@@ -74,7 +74,6 @@ footer{text-align:center;padding:30px;background:#000}
 <p>Secure • Corporate • Advanced Logistics</p>
 </section>
 
-<!-- TRACKING SECTION -->
 <section id="track" class="card">
 <h2>Track Your Shipment</h2>
 <input id="trackInput" placeholder="Enter tracking number">
@@ -82,7 +81,6 @@ footer{text-align:center;padding:30px;background:#000}
 <div id="result"></div>
 </section>
 
-<!-- ABOUT COMPANY -->
 <section id="about" class="section">
 <div class="grid">
 <div>
@@ -107,7 +105,6 @@ TE Logistics Movers is a luxury international logistics and relocation provider 
 </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact" class="section">
 <h2>Contact</h2>
 <p>Email: customerservice@telogisticsmovers.com</p>
@@ -119,7 +116,6 @@ TE Logistics Movers is a luxury international logistics and relocation provider 
 
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
@@ -156,14 +152,26 @@ document.getElementById('trackBtn').addEventListener('click', ()=>{
       'Delivered'
     ];
     let html = '<h2>'+r.receiver+'</h2>';
-    html+='Current Location: '+r.location+'<br>';
-    html+='Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
-    html+='Updated: '+r.date+' '+r.time;
-    html+='<div class="timeline">';
+    html += 'Current Location: '+r.location+'<br>';
+    html += 'Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
+    html += 'Updated: '+r.date+' '+r.time;
+    html += '<div class="timeline">';
     steps.forEach((s,i)=>{
       if(i < r.status){
-        html+="<div class='active'>✔ "+s+"</div>";
+        html += "<div class='active'>✔ "+s+"</div>";
       } else if(i===r.status && s==='Pending Insurance'){
-        html+="<div class='pending'>⚠ "+s+"</div>";
+        html += "<div class='pending'>⚠ "+s+"</div>";
       } else if(i===r.status){
-        html+="<div class='active'>✔ "+s+"</div>";
+        html += "<div class='active'>✔ "+s+"</div>";
+      } else{
+        html += "<div>"+s+"</div>";
+      }
+    });
+    html += '</div>';
+    document.getElementById('result').innerHTML = html;
+  });
+});
+</script>
+
+</body>
+</html>
