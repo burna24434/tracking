@@ -23,6 +23,7 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 <div class="card" id="panel" style="display:none">
 <h2>Create / Edit Shipment</h2>
 
+<input id="trackId" placeholder="Tracking ID (leave blank to generate)">
 <input id="receiver" placeholder="Receiver">
 <input id="location" placeholder="Current location">
 <input id="address" placeholder="Address">
@@ -41,18 +42,15 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 <option>Delivered</option>
 </select>
 
-<button id="saveBtn">Create Shipment</button>
-
+<button id="saveBtn">Save Shipment</button>
 <h3 id="msg"></h3>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
   authDomain: "te-logistics-movers.firebaseapp.com",
@@ -63,7 +61,6 @@ const firebaseConfig = {
   measurementId: "G-GPVKBW8D8D"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase(app);
@@ -79,9 +76,11 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   }
 });
 
-// Save Shipment
-document.getElementById('saveBtn').addEventListener('click', () => {
-  const id = 'TL'+Math.floor(Math.random()*999999999); // auto-generate tracking ID
+// Save / Update shipment
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  let id = document.getElementById('trackId').value.trim();
+  if(!id) id = 'TL'+Math.floor(Math.random()*999999999); // auto-generate if blank
+
   const shipment = {
     receiver: document.getElementById('receiver').value,
     location: document.getElementById('location').value,
@@ -93,10 +92,10 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     date: document.getElementById('date').value,
     time: document.getElementById('time').value
   };
+
   set(ref(db,'shipments/'+id), shipment).then(()=>{
-    document.getElementById('msg').innerText = 'Shipment Created! Tracking Number: ' + id;
-    // Clear form
-    document.querySelectorAll('#panel input').forEach(input => input.value='');
+    document.getElementById('msg').innerText='Saved Tracking: '+id;
+    document.querySelectorAll('#panel input').forEach(input=>input.value='');
   });
 });
 </script>
