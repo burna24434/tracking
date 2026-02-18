@@ -78,11 +78,12 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   }
 });
 
-// Auto-fill shipment info if existing tracking number
-document.getElementById('trackId').addEventListener('blur', () => {
+// Auto-fill shipment info if existing Tracking ID
+document.getElementById('trackId').addEventListener('blur', async () => {
   const id = document.getElementById('trackId').value.trim();
   if(!id) return;
-  get(ref(db,'shipments/'+id)).then(snapshot=>{
+  try {
+    const snapshot = await get(ref(db,'shipments/'+id));
     if(snapshot.exists()){
       const r = snapshot.val();
       document.getElementById('receiver').value = r.receiver;
@@ -95,13 +96,15 @@ document.getElementById('trackId').addEventListener('blur', () => {
       document.getElementById('date').value = r.date;
       document.getElementById('time').value = r.time;
     }
-  });
+  } catch(err){
+    alert("Error reading shipment: "+err.message);
+  }
 });
 
 // Save / Update shipment
-document.getElementById('saveBtn').addEventListener('click', ()=>{
+document.getElementById('saveBtn').addEventListener('click', async ()=>{
   let id = document.getElementById('trackId').value.trim();
-  if(!id) id = 'TL'+Math.floor(Math.random()*999999999); // auto-generate
+  if(!id) id = 'TL'+Math.floor(Math.random()*999999999);
 
   const shipment = {
     receiver: document.getElementById('receiver').value,
@@ -115,10 +118,13 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     time: document.getElementById('time').value
   };
 
-  set(ref(db,'shipments/'+id), shipment).then(()=>{
+  try {
+    await set(ref(db,'shipments/'+id), shipment);
     document.getElementById('msg').innerText='Saved Tracking: '+id;
     document.querySelectorAll('#panel input').forEach(input => input.value='');
-  });
+  } catch(err){
+    alert('Error saving shipment: '+err.message);
+  }
 });
 </script>
 
