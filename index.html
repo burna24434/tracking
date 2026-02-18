@@ -39,6 +39,14 @@ button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;bac
 
 .section{padding:80px 8%}
 
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
+
+.about-img{width:100%;border-radius:18px}
+
+.director{display:flex;gap:20px;align-items:center}
+
+.director img{width:130px;border-radius:50%}
+
 .timeline{margin-top:25px}
 .timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
 
@@ -56,6 +64,8 @@ footer{text-align:center;padding:30px;background:#000}
 <h1>TE LOGISTICS MOVERS</h1>
 <nav>
 <a href="#track">Track</a>
+<a href="#about">Company</a>
+<a href="#contact">Contact</a>
 </nav>
 </header>
 
@@ -64,11 +74,43 @@ footer{text-align:center;padding:30px;background:#000}
 <p>Secure • Corporate • Advanced Logistics</p>
 </section>
 
+<!-- TRACKING SECTION -->
 <section id="track" class="card">
 <h2>Track Your Shipment</h2>
 <input id="trackInput" placeholder="Enter tracking number">
 <button id="trackBtn">Track Shipment</button>
 <div id="result"></div>
+</section>
+
+<!-- ABOUT COMPANY -->
+<section id="about" class="section">
+<div class="grid">
+<div>
+<h2>About Our Company</h2>
+<p>
+TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide. Our advanced shipment monitoring and warehouse networks guarantee safe, timely delivery.
+</p>
+</div>
+<div>
+<img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
+</div>
+</div>
+
+<br><br>
+
+<div class="director">
+<img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
+<div>
+<h3>Roberto Powell</h3>
+<p>Senior Executive Director</p>
+</div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section">
+<h2>Contact</h2>
+<p>Email: customerservice@telogisticsmovers.com</p>
 </section>
 
 <footer>
@@ -77,12 +119,12 @@ footer{text-align:center;padding:30px;background:#000}
 
 </div>
 
+<!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
   authDomain: "te-logistics-movers.firebaseapp.com",
@@ -93,13 +135,12 @@ const firebaseConfig = {
   measurementId: "G-GPVKBW8D8D"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase(app);
 
-document.getElementById('trackBtn').addEventListener('click', () => {
-  const id = document.getElementById('trackInput').value;
+document.getElementById('trackBtn').addEventListener('click', ()=>{
+  const id = document.getElementById('trackInput').value.trim();
   get(ref(db,'shipments/'+id)).then(snapshot=>{
     if(!snapshot.exists()){
       document.getElementById('result').innerHTML='Tracking not found';
@@ -114,32 +155,15 @@ document.getElementById('trackBtn').addEventListener('click', () => {
       'Out for Delivery',
       'Delivered'
     ];
-
     let html = '<h2>'+r.receiver+'</h2>';
-    html += 'Current Location: '+r.location+'<br>';
-    html += 'Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
-    html += 'Updated: '+r.date+' '+r.time;
-
-    html += '<div class="timeline">';
+    html+='Current Location: '+r.location+'<br>';
+    html+='Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
+    html+='Updated: '+r.date+' '+r.time;
+    html+='<div class="timeline">';
     steps.forEach((s,i)=>{
       if(i < r.status){
-        html += "<div class='active'>✔ "+s+"</div>";
-      }
-      else if(i===r.status && s==='Pending Insurance'){
-        html += "<div class='pending'>⚠ "+s+"</div>";
-      }
-      else if(i===r.status){
-        html += "<div class='active'>✔ "+s+"</div>";
-      }
-      else{
-        html += "<div>"+s+"</div>";
-      }
-    });
-    html += '</div>';
-    document.getElementById('result').innerHTML = html;
-  });
-});
-</script>
-
-</body>
-</html>
+        html+="<div class='active'>✔ "+s+"</div>";
+      } else if(i===r.status && s==='Pending Insurance'){
+        html+="<div class='pending'>⚠ "+s+"</div>";
+      } else if(i===r.status){
+        html+="<div class='active'>✔ "+s+"</div>";
