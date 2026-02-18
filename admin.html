@@ -43,13 +43,12 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 </select>
 
 <button id="saveBtn">Save Shipment</button>
-
 <h3 id="msg"></h3>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
 // Firebase config
@@ -79,10 +78,30 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   }
 });
 
-// Save / Auto-generate tracking number
+// Auto-fill shipment info if existing tracking number
+document.getElementById('trackId').addEventListener('blur', () => {
+  const id = document.getElementById('trackId').value.trim();
+  if(!id) return;
+  get(ref(db,'shipments/'+id)).then(snapshot=>{
+    if(snapshot.exists()){
+      const r = snapshot.val();
+      document.getElementById('receiver').value = r.receiver;
+      document.getElementById('location').value = r.location;
+      document.getElementById('address').value = r.address;
+      document.getElementById('city').value = r.city;
+      document.getElementById('state').value = r.state;
+      document.getElementById('zip').value = r.zip;
+      document.getElementById('status').selectedIndex = r.status;
+      document.getElementById('date').value = r.date;
+      document.getElementById('time').value = r.time;
+    }
+  });
+});
+
+// Save / Update shipment
 document.getElementById('saveBtn').addEventListener('click', ()=>{
   let id = document.getElementById('trackId').value.trim();
-  if(!id) id = 'TL'+Math.floor(Math.random()*999999999); // <-- Auto-generate if blank
+  if(!id) id = 'TL'+Math.floor(Math.random()*999999999); // auto-generate
 
   const shipment = {
     receiver: document.getElementById('receiver').value,
@@ -98,7 +117,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
 
   set(ref(db,'shipments/'+id), shipment).then(()=>{
     document.getElementById('msg').innerText='Saved Tracking: '+id;
-    document.querySelectorAll('#panel input').forEach(input => input.value=''); // Clear form
+    document.querySelectorAll('#panel input').forEach(input => input.value='');
   });
 });
 </script>
