@@ -7,7 +7,7 @@
 <style>
 body{font-family:Poppins;background:#0c1020;color:#fff;padding:40px}
 .card{max-width:700px;margin:auto;background:#121a33;padding:30px;border-radius:15px}
-input,select{width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px}
+input,select,textarea{width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px}
 button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;color:#fff;border-radius:8px}
 </style>
 </head>
@@ -25,11 +25,14 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 
 <input id="trackId" placeholder="Tracking ID (leave blank to generate)">
 <input id="receiver" placeholder="Receiver">
+<input id="email" placeholder="Customer Email">
 <input id="location" placeholder="Current location">
 <input id="address" placeholder="Address">
 <input id="city" placeholder="City">
 <input id="state" placeholder="State">
 <input id="zip" placeholder="Zip">
+<textarea id="items" placeholder="Items (Example: 1x Guitar, 2x Speaker)"></textarea>
+<input id="amount" placeholder="Total Amount ($)">
 <input id="date" placeholder="Date">
 <input id="time" placeholder="Time">
 
@@ -48,84 +51,74 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import emailjs from "https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js";
 
-// Firebase config
+emailjs.init("BLZz7i0IR9WgT0NYW");
+
 const firebaseConfig = {
   apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
   authDomain: "te-logistics-movers.firebaseapp.com",
   projectId: "te-logistics-movers",
   storageBucket: "te-logistics-movers.firebasestorage.app",
   messagingSenderId: "1076872105452",
-  appId: "1:1076872105452:web:919c3f363dfebd896c84c9",
-  measurementId: "G-GPVKBW8D8D"
+  appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getDatabase(app);
 
-// Login
-document.getElementById('loginBtn').addEventListener('click', () => {
-  const password = document.getElementById('pass').value;
-  if(password === 'admin123'){
-    document.getElementById('login').style.display = 'none';
-    document.getElementById('panel').style.display = 'block';
+document.getElementById('loginBtn').onclick = () => {
+  if(document.getElementById('pass').value === 'admin123'){
+    login.style.display='none';
+    panel.style.display='block';
   } else {
-    alert('Incorrect password');
+    alert("Incorrect password");
   }
-});
+};
 
-// Auto-fill shipment info if existing Tracking ID
-document.getElementById('trackId').addEventListener('blur', async () => {
-  const id = document.getElementById('trackId').value.trim();
-  if(!id) return;
-  try {
-    const snapshot = await get(ref(db,'shipments/'+id));
-    if(snapshot.exists()){
-      const r = snapshot.val();
-      document.getElementById('receiver').value = r.receiver;
-      document.getElementById('location').value = r.location;
-      document.getElementById('address').value = r.address;
-      document.getElementById('city').value = r.city;
-      document.getElementById('state').value = r.state;
-      document.getElementById('zip').value = r.zip;
-      document.getElementById('status').selectedIndex = r.status;
-      document.getElementById('date').value = r.date;
-      document.getElementById('time').value = r.time;
-    }
-  } catch(err){
-    alert("Error reading shipment: "+err.message);
-  }
-});
+document.getElementById('saveBtn').onclick = async () => {
 
-// Save / Update shipment
-document.getElementById('saveBtn').addEventListener('click', async ()=>{
   let id = document.getElementById('trackId').value.trim();
-  if(!id) id = 'TL'+Math.floor(Math.random()*999999999);
+  if(!id) id = "TL" + Math.floor(Math.random()*999999999);
+
+  const invoiceId = "INV" + Math.floor(Math.random()*999999999);
 
   const shipment = {
-    receiver: document.getElementById('receiver').value,
-    location: document.getElementById('location').value,
-    address: document.getElementById('address').value,
-    city: document.getElementById('city').value,
-    state: document.getElementById('state').value,
-    zip: document.getElementById('zip').value,
-    status: document.getElementById('status').selectedIndex,
-    date: document.getElementById('date').value,
-    time: document.getElementById('time').value
+    receiver: receiver.value,
+    email: email.value,
+    location: location.value,
+    address: address.value,
+    city: city.value,
+    state: state.value,
+    zip: zip.value,
+    items: items.value,
+    amount: amount.value,
+    status: status.selectedIndex,
+    date: date.value,
+    time: time.value
   };
 
-  try {
-    await set(ref(db,'shipments/'+id), shipment);
-    document.getElementById('msg').innerText='Saved Tracking: '+id;
-    document.querySelectorAll('#panel input').forEach(input => input.value='');
-  } catch(err){
-    alert('Error saving shipment: '+err.message);
-  }
-});
+  await set(ref(db,'shipments/'+id), shipment);
+
+  emailjs.send("service_y96zroe","template_ue23cwj",{
+    invoice_id: invoiceId,
+    tracking_id: id,
+    date: shipment.date,
+    receiver: shipment.receiver,
+    address: shipment.address,
+    city: shipment.city,
+    state: shipment.state,
+    zip: shipment.zip,
+    to_email: shipment.email,
+    location: shipment.location,
+    status: document.getElementById("status").options[shipment.status].text,
+    items: shipment.items,
+    amount: shipment.amount
+  });
+
+  msg.innerText = "Shipment Saved & Invoice Sent | Tracking: " + id;
+};
 </script>
 
 </body>
