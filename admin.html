@@ -7,15 +7,18 @@
 
 <style>
 body{font-family:Poppins;background:#0c1020;color:#fff;padding:40px}
-.card{max-width:900px;margin:auto;background:#121a33;padding:30px;border-radius:15px;margin-bottom:30px}
+.card{max-width:950px;margin:auto;background:#121a33;padding:30px;border-radius:15px;margin-bottom:30px}
 input,select,textarea{width:100%;padding:14px;margin-top:12px;border:none;border-radius:8px}
 button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;color:#fff;border-radius:8px;cursor:pointer}
 table{width:100%;margin-top:20px;border-collapse:collapse}
 td,th{padding:10px;border-bottom:1px solid #2c355a;text-align:left}
+.logo{display:block;margin:auto;width:180px;margin-bottom:20px}
 </style>
 </head>
 
 <body>
+
+<img src="logo.png" class="logo">
 
 <div class="card" id="login">
 <h2>Secure Admin Login</h2>
@@ -24,10 +27,9 @@ td,th{padding:10px;border-bottom:1px solid #2c355a;text-align:left}
 </div>
 
 <div class="card" id="panel" style="display:none">
-
 <h2>Create / Edit Shipment</h2>
 
-<input id="trackId" placeholder="Tracking ID (leave blank to generate)">
+<input id="trackId" placeholder="Tracking ID (leave blank to auto generate)">
 <input id="receiver" placeholder="Receiver">
 <input id="location" placeholder="Current location">
 <input id="address" placeholder="Address">
@@ -37,7 +39,7 @@ td,th{padding:10px;border-bottom:1px solid #2c355a;text-align:left}
 <input id="date" placeholder="Date">
 <input id="time" placeholder="Time">
 <textarea id="items" placeholder="Items in shipment"></textarea>
-<input id="amount" placeholder="Total Amount">
+<input id="amount" placeholder="Total Amount (USD)">
 
 <select id="status">
 <option value="0">Shipment Created</option>
@@ -48,26 +50,26 @@ td,th{padding:10px;border-bottom:1px solid #2c355a;text-align:left}
 <option value="5">Delivered</option>
 </select>
 
-<button onclick="save()">Save Shipment</button>
-
+<button onclick="saveShipment()">Save Shipment</button>
 <h3 id="msg"></h3>
-
 </div>
 
-<div class="card" id="listPanel" style="display:none">
-<h2>Shipment List</h2>
+<div class="card" id="dashboard" style="display:none">
+<h2>Shipment Dashboard</h2>
 <table id="shipmentTable">
 <thead>
 <tr>
 <th>Tracking</th>
 <th>Receiver</th>
 <th>Status</th>
-<th>Action</th>
+<th>Actions</th>
 </tr>
 </thead>
 <tbody></tbody>
 </table>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
@@ -86,24 +88,23 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.login = function(){
-if(document.getElementById('pass').value === "admin123"){
-document.getElementById('login').style.display="none";
-document.getElementById('panel').style.display="block";
-document.getElementById('listPanel').style.display="block";
+if(pass.value === "admin123"){
+login.style.display="none";
+panel.style.display="block";
+dashboard.style.display="block";
 loadShipments();
 }else{
 alert("Incorrect password");
 }
 }
 
-function randomID(){
+function generateID(){
 return "TL"+Math.floor(Math.random()*999999999);
 }
 
-window.save = async function(){
-
-let id = document.getElementById('trackId').value.trim();
-if(!id) id = randomID();
+window.saveShipment = async function(){
+let id = trackId.value.trim();
+if(!id) id = generateID();
 
 const shipment = {
 receiver: receiver.value,
@@ -122,8 +123,7 @@ status: parseInt(status.value)
 await set(ref(db,"shipments/"+id), shipment);
 
 msg.innerText="Saved Tracking: "+id;
-
-document.querySelectorAll('#panel input, #panel textarea').forEach(e=>e.value="");
+loadShipments();
 }
 
 function loadShipments(){
@@ -132,12 +132,17 @@ let tbody=document.querySelector("#shipmentTable tbody");
 tbody.innerHTML="";
 snapshot.forEach(child=>{
 let s=child.val();
+let statusText=["Shipment Created","Processing","Pending Insurance","In Transit","Out for Delivery","Delivered"][s.status];
+
 let tr=document.createElement("tr");
 tr.innerHTML=`
 <td>${child.key}</td>
 <td>${s.receiver}</td>
-<td>${s.status}</td>
-<td><button onclick="editShipment('${child.key}')">Edit</button></td>
+<td>${statusText}</td>
+<td>
+<button onclick="editShipment('${child.key}')">Edit</button>
+<button onclick='generateInvoice("${child.key}", ${JSON.stringify(s)})'>Invoice</button>
+</td>
 `;
 tbody.appendChild(tr);
 });
@@ -163,6 +168,51 @@ status.value=r.status;
 window.scrollTo(0,0);
 }
 
+window.generateInvoice = function(id, shipment){
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+
+const logo = new Image();
+logo.src = "logo.png";
+
+logo.onload = function(){
+
+doc.addImage(logo,"PNG",40,10,130,50);
+
+doc.setFontSize(20);
+doc.text("INVOICE",105,75,{align:"center"});
+
+doc.setFontSize(12);
+doc.text("Invoice No: INV-"+id,20,95);
+doc.text("Tracking No: "+id,20,105);
+doc.text("Date: "+new Date().toLocaleDateString(),20,115);
+
+doc.text("Bill To:",130,95);
+doc.text(shipment.receiver,130,105);
+doc.text(shipment.address+", "+shipment.city,130,115);
+doc.text(shipment.state+" "+shipment.zip,130,125);
+
+doc.line(15,135,195,135);
+
+doc.text("Description",20,150);
+doc.text("Amount",160,150);
+
+doc.line(15,155,195,155);
+
+doc.text(shipment.items,20,170);
+doc.text("$"+shipment.amount,160,170);
+
+doc.line(15,180,195,180);
+
+doc.setFontSize(14);
+doc.text("Total: $"+shipment.amount,150,195);
+
+doc.setFontSize(10);
+doc.text("Thank you for choosing TE Logistics Movers.",105,215,{align:"center"});
+
+doc.save("Invoice_"+id+".pdf");
+}
+}
 </script>
 
 </body>
