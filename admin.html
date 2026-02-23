@@ -20,10 +20,10 @@ td,th{padding:10px;border-bottom:1px solid #2c355a;text-align:left}
 
 <img src="logo.png" class="logo">
 
-<div class="card" id="login">
+<div class="card" id="loginCard">
 <h2>Secure Admin Login</h2>
-<input type="password" id="pass" placeholder="Password">
-<button onclick="login()">Login</button>
+<input type="password" id="passInput" placeholder="Password">
+<button id="loginBtn">Login</button>
 </div>
 
 <div class="card" id="panel" style="display:none">
@@ -50,7 +50,7 @@ td,th{padding:10px;border-bottom:1px solid #2c355a;text-align:left}
 <option value="5">Delivered</option>
 </select>
 
-<button onclick="saveShipment()">Save Shipment</button>
+<button id="saveBtn">Save Shipment</button>
 <h3 id="msg"></h3>
 </div>
 
@@ -87,44 +87,47 @@ appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.login = function(){
-if(pass.value === "admin123"){
-login.style.display="none";
-panel.style.display="block";
-dashboard.style.display="block";
+// PROPER LOGIN FIX
+document.getElementById("loginBtn").addEventListener("click", function(){
+const password = document.getElementById("passInput").value.trim();
+
+if(password === "admin123"){
+document.getElementById("loginCard").style.display="none";
+document.getElementById("panel").style.display="block";
+document.getElementById("dashboard").style.display="block";
 loadShipments();
 }else{
 alert("Incorrect password");
 }
-}
+});
 
 function generateID(){
 return "TL"+Math.floor(Math.random()*999999999);
 }
 
-window.saveShipment = async function(){
-let id = trackId.value.trim();
+document.getElementById("saveBtn").addEventListener("click", async function(){
+
+let id = document.getElementById("trackId").value.trim();
 if(!id) id = generateID();
 
 const shipment = {
-receiver: receiver.value,
-location: location.value,
-address: address.value,
-city: city.value,
-state: state.value,
-zip: zip.value,
-date: date.value,
-time: time.value,
-items: items.value,
-amount: amount.value,
-status: parseInt(status.value)
+receiver: document.getElementById("receiver").value,
+location: document.getElementById("location").value,
+address: document.getElementById("address").value,
+city: document.getElementById("city").value,
+state: document.getElementById("state").value,
+zip: document.getElementById("zip").value,
+date: document.getElementById("date").value,
+time: document.getElementById("time").value,
+items: document.getElementById("items").value,
+amount: document.getElementById("amount").value,
+status: parseInt(document.getElementById("status").value)
 };
 
 await set(ref(db,"shipments/"+id), shipment);
 
-msg.innerText="Saved Tracking: "+id;
-loadShipments();
-}
+document.getElementById("msg").innerText="Saved Tracking: "+id;
+});
 
 function loadShipments(){
 onValue(ref(db,"shipments"), snapshot=>{
@@ -153,18 +156,18 @@ window.editShipment = async function(id){
 let snap=await get(ref(db,"shipments/"+id));
 if(!snap.exists()) return;
 let r=snap.val();
-trackId.value=id;
-receiver.value=r.receiver;
-location.value=r.location;
-address.value=r.address;
-city.value=r.city;
-state.value=r.state;
-zip.value=r.zip;
-date.value=r.date;
-time.value=r.time;
-items.value=r.items;
-amount.value=r.amount;
-status.value=r.status;
+document.getElementById("trackId").value=id;
+document.getElementById("receiver").value=r.receiver;
+document.getElementById("location").value=r.location;
+document.getElementById("address").value=r.address;
+document.getElementById("city").value=r.city;
+document.getElementById("state").value=r.state;
+document.getElementById("zip").value=r.zip;
+document.getElementById("date").value=r.date;
+document.getElementById("time").value=r.time;
+document.getElementById("items").value=r.items;
+document.getElementById("amount").value=r.amount;
+document.getElementById("status").value=r.status;
 window.scrollTo(0,0);
 }
 
@@ -176,43 +179,30 @@ const logo = new Image();
 logo.src = "logo.png";
 
 logo.onload = function(){
-
 doc.addImage(logo,"PNG",40,10,130,50);
-
 doc.setFontSize(20);
 doc.text("INVOICE",105,75,{align:"center"});
-
 doc.setFontSize(12);
 doc.text("Invoice No: INV-"+id,20,95);
 doc.text("Tracking No: "+id,20,105);
 doc.text("Date: "+new Date().toLocaleDateString(),20,115);
-
 doc.text("Bill To:",130,95);
 doc.text(shipment.receiver,130,105);
 doc.text(shipment.address+", "+shipment.city,130,115);
 doc.text(shipment.state+" "+shipment.zip,130,125);
-
 doc.line(15,135,195,135);
-
 doc.text("Description",20,150);
 doc.text("Amount",160,150);
-
 doc.line(15,155,195,155);
-
 doc.text(shipment.items,20,170);
 doc.text("$"+shipment.amount,160,170);
-
 doc.line(15,180,195,180);
-
 doc.setFontSize(14);
 doc.text("Total: $"+shipment.amount,150,195);
-
-doc.setFontSize(10);
-doc.text("Thank you for choosing TE Logistics Movers.",105,215,{align:"center"});
-
 doc.save("Invoice_"+id+".pdf");
 }
 }
+
 </script>
 
 </body>
