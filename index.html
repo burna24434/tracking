@@ -35,11 +35,14 @@ button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;bac
 .active{color:#00ffae;font-weight:600}
 .pending{color:#ffd000;font-weight:600}
 footer{text-align:center;padding:30px;background:#000}
+.logo{display:block;margin:auto;width:200px;margin-top:20px}
 </style>
 </head>
 
 <body>
 <div class="overlay">
+
+<img src="logo.png" class="logo">
 
 <header>
 <h1>TE LOGISTICS MOVERS</h1>
@@ -58,7 +61,7 @@ footer{text-align:center;padding:30px;background:#000}
 <section id="track" class="card">
 <h2>Track Your Shipment</h2>
 <input id="trackInput" placeholder="Enter tracking number">
-<button onclick="track()">Track Shipment</button>
+<button onclick="trackShipment()">Track Shipment</button>
 <div id="result"></div>
 </section>
 
@@ -66,19 +69,12 @@ footer{text-align:center;padding:30px;background:#000}
 <div class="grid">
 <div>
 <h2>About Our Company</h2>
-<p>
-TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.
-</p>
+<p>TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.</p>
 <br>
-<p>
-Our corporate freight division specializes in high-value cargo handling, insured transport, global customs processing and executive relocation services.
-</p>
+<p>Our corporate freight division specializes in high-value cargo handling, insured transport, and global customs documentation.</p>
 <br>
-<p>
-With international warehousing partnerships and compliance monitoring systems, we ensure operational excellence and secure logistics worldwide.
-</p>
+<p>With global warehousing networks and compliance systems, we guarantee safe, transparent and timely delivery worldwide.</p>
 </div>
-
 <div>
 <img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
 </div>
@@ -122,26 +118,16 @@ appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.track = async function(){
-
-let id=document.getElementById("trackInput").value.trim();
+window.trackShipment = async function(){
+let id=trackInput.value.trim();
 let snap=await get(ref(db,"shipments/"+id));
-
 if(!snap.exists()){
 result.innerHTML="Tracking not found";
 return;
 }
-
 let r=snap.val();
 
-let steps=[
-"Shipment Created",
-"Processing",
-"Pending Insurance",
-"In Transit",
-"Out for Delivery",
-"Delivered"
-];
+let steps=["Shipment Created","Processing","Pending Insurance","In Transit","Out for Delivery","Delivered"];
 
 let html="<h2>"+r.receiver+"</h2>";
 html+="Current Location: "+r.location+"<br>";
@@ -167,7 +153,6 @@ html+="<div>"+s+"</div>";
 });
 
 html+="</div>";
-
 result.innerHTML=html;
 }
 </script>
