@@ -7,22 +7,34 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
-body{background:#0c1020;color:#fff}
-.overlay{min-height:100vh;padding-bottom:100px}
-header{padding:25px 8%;display:flex;align-items:center;gap:20px}
-header img{height:60px}
-.hero{text-align:center;padding:60px 8%}
-.card{max-width:900px;margin:40px auto;background:#121a33;padding:40px;border-radius:20px}
+body{
+background:url('https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1900&q=80') no-repeat center center fixed;
+background-size:cover;
+color:#fff;
+}
+.overlay{background:rgba(8,12,25,.88);min-height:100vh}
+header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:32px;font-weight:700;letter-spacing:3px}
+nav a{color:#fff;text-decoration:none;margin-left:25px}
+.hero{text-align:center;padding:80px 8%}
+.hero h2{font-size:42px;margin-bottom:10px}
+.card{max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
+padding:40px;border-radius:20px;backdrop-filter:blur(20px);
+box-shadow:0 10px 50px rgba(0,0,0,.5)}
 input{width:100%;padding:15px;border:none;border-radius:8px;margin-top:15px}
-button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;background:#0066ff;color:#fff;cursor:pointer}
-.timeline div{padding:10px;margin-top:5px}
-.active{color:#00ffae}
-.pending{color:#ffd000}
+button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);color:#fff;font-weight:600;cursor:pointer}
 .section{padding:80px 8%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
+.about-img{width:100%;border-radius:18px}
+.director{display:flex;gap:20px;align-items:center}
+.director img{width:130px;border-radius:50%}
+.timeline{margin-top:25px}
+.timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
+.active{color:#00ffae;font-weight:600}
+.pending{color:#ffd000;font-weight:600}
+footer{text-align:center;padding:30px;background:#000}
 </style>
 </head>
 
@@ -30,38 +42,67 @@ button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;bac
 <div class="overlay">
 
 <header>
-<img src="logo.png">
 <h1>TE LOGISTICS MOVERS</h1>
+<nav>
+<a href="#track">Track</a>
+<a href="#about">Company</a>
+<a href="#contact">Contact</a>
+</nav>
 </header>
 
 <section class="hero">
 <h2>Premium Global Shipment Monitoring</h2>
+<p>Secure • Corporate • Advanced Logistics</p>
 </section>
 
-<section class="card">
-<h2>Track Shipment</h2>
-<input id="trackInput" placeholder="Enter Tracking Number">
-<button onclick="track()">Track</button>
+<section id="track" class="card">
+<h2>Track Your Shipment</h2>
+<input id="trackInput" placeholder="Enter tracking number">
+<button onclick="track()">Track Shipment</button>
 <div id="result"></div>
 </section>
 
-<section class="section">
+<section id="about" class="section">
+<div class="grid">
+<div>
 <h2>About Our Company</h2>
 <p>
-TE Logistics Movers is a luxury premium global freight organization providing secure cargo movement worldwide.
-We operate across North America, Europe, Asia and the Middle East with advanced monitoring infrastructure.
+TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.
 </p>
 <br>
 <p>
-Our warehousing solutions include climate-controlled storage, high-value asset protection, corporate freight relocation,
-international customs documentation, and insured cargo transport services.
+Our corporate freight division specializes in high-value cargo handling, insured transport, global customs processing and executive relocation services.
 </p>
 <br>
 <p>
-With over a decade of operational excellence, we ensure every shipment is monitored, verified and secured
-through multi-stage logistics processing.
+With international warehousing partnerships and compliance monitoring systems, we ensure operational excellence and secure logistics worldwide.
 </p>
+</div>
+
+<div>
+<img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
+</div>
+</div>
+
+<br><br>
+
+<div class="director">
+<img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
+<div>
+<h3>Roberto Powell</h3>
+<p>Senior Executive Director</p>
+</div>
+</div>
 </section>
+
+<section id="contact" class="section">
+<h2>Contact</h2>
+<p>Email: customerservice@telogisticsmovers.com</p>
+</section>
+
+<footer>
+© 2026 TE Logistics Movers
+</footer>
 
 </div>
 
@@ -82,61 +123,52 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.track = async function(){
-const id = trackInput.value.trim();
-const snapshot = await get(ref(db,'shipments/'+id));
 
-if(!snapshot.exists()){
+let id=document.getElementById("trackInput").value.trim();
+let snap=await get(ref(db,"shipments/"+id));
+
+if(!snap.exists()){
 result.innerHTML="Tracking not found";
 return;
 }
 
-const r = snapshot.val();
+let r=snap.val();
 
-let steps=["Shipment Created","Processing","In Transit","Out for Delivery","Delivered"];
-if(r.status==2){
-steps.splice(2,0,"Pending Insurance");
-}
+let steps=[
+"Shipment Created",
+"Processing",
+"Pending Insurance",
+"In Transit",
+"Out for Delivery",
+"Delivered"
+];
 
-let html=`<h2>${r.receiver}</h2>
-<p>Location: ${r.location}</p>
-<p>Items: ${r.items}</p>
-<p>Amount: $${r.amount}</p>
-<div class="timeline">`;
+let html="<h2>"+r.receiver+"</h2>";
+html+="Current Location: "+r.location+"<br>";
+html+="Address: "+r.address+", "+r.city+", "+r.state+", "+r.zip+"<br>";
+html+="Updated: "+r.date+" "+r.time+"<br><br>";
+html+="<strong>Items:</strong><br>"+r.items+"<br><br>";
+html+="<strong>Total Amount:</strong> $"+r.amount+"<br><br>";
+html+="<div class='timeline'>";
 
 steps.forEach((s,i)=>{
-if(s=="Pending Insurance"){
-html+=`<div class="pending">⚠ ${s}</div>`;
+if(i<r.status){
+html+="<div class='active'>✔ "+s+"</div>";
 }
-else if(i<=r.status){
-html+=`<div class="active">✔ ${s}</div>`;
+else if(i==r.status && s=="Pending Insurance"){
+html+="<div class='pending'>⚠ "+s+"</div>";
+}
+else if(i==r.status){
+html+="<div class='active'>✔ "+s+"</div>";
 }
 else{
-html+=`<div>${s}</div>`;
+html+="<div>"+s+"</div>";
 }
 });
 
-html+=`</div>
-<button onclick="downloadPDF('${id}')">Download Invoice</button>`;
+html+="</div>";
 
 result.innerHTML=html;
-window.currentShipment=r;
-}
-
-window.downloadPDF=function(id){
-const { jsPDF } = window.jspdf;
-const doc = new jsPDF();
-const r=window.currentShipment;
-const img=new Image();
-img.src="logo.png";
-img.onload=function(){
-doc.addImage(img,"PNG",15,10,40,25);
-doc.text("TE LOGISTICS MOVERS",70,20);
-doc.text("Tracking: "+id,20,50);
-doc.text("Receiver: "+r.receiver,20,60);
-doc.text("Items: "+r.items,20,70);
-doc.text("Amount: $"+r.amount,20,80);
-doc.save("Invoice_"+id+".pdf");
-}
 }
 </script>
 
