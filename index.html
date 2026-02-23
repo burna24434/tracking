@@ -9,32 +9,62 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+
 body{
 background:url('https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1900&q=80') no-repeat center center fixed;
 background-size:cover;
 color:#fff;
 }
+
 .overlay{background:rgba(8,12,25,.88);min-height:100vh}
+
 header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
+
 header h1{font-size:32px;font-weight:700;letter-spacing:3px}
+
 nav a{color:#fff;text-decoration:none;margin-left:25px}
+
 .hero{text-align:center;padding:80px 8%}
 .hero h2{font-size:42px;margin-bottom:10px}
-.card{max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
+
+.card{
+max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
 padding:40px;border-radius:20px;backdrop-filter:blur(20px);
-box-shadow:0 10px 50px rgba(0,0,0,.5)}
+box-shadow:0 10px 50px rgba(0,0,0,.5)
+}
+
 input{width:100%;padding:15px;border:none;border-radius:8px;margin-top:15px}
-button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);color:#fff;font-weight:600;cursor:pointer}
+
+button{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,#0066ff,#00c6ff);
+color:#fff;
+font-weight:600;
+cursor:pointer
+}
+
 .section{padding:80px 8%}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
+
 .about-img{width:100%;border-radius:18px}
+
 .director{display:flex;gap:20px;align-items:center}
+
 .director img{width:130px;border-radius:50%}
+
 .timeline{margin-top:25px}
 .timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
+
 .active{color:#00ffae;font-weight:600}
 .pending{color:#ffd000;font-weight:600}
+
 footer{text-align:center;padding:30px;background:#000}
+
 .logo{display:block;margin:auto;width:200px;margin-top:20px}
 </style>
 </head>
@@ -69,12 +99,19 @@ footer{text-align:center;padding:30px;background:#000}
 <div class="grid">
 <div>
 <h2>About Our Company</h2>
-<p>TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.</p>
+<p>
+TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.
+</p>
 <br>
-<p>Our corporate freight division specializes in high-value cargo handling, insured transport, and global customs documentation.</p>
+<p>
+Our corporate freight division specializes in high-value cargo handling, insured transport, global customs processing and executive relocation services.
+</p>
 <br>
-<p>With global warehousing networks and compliance systems, we guarantee safe, transparent and timely delivery worldwide.</p>
+<p>
+With international warehousing partnerships and compliance monitoring systems, we ensure operational excellence and secure logistics worldwide.
+</p>
 </div>
+
 <div>
 <img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
 </div>
@@ -102,34 +139,48 @@ footer{text-align:center;padding:30px;background:#000}
 
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+<!-- Firebase v8 (matching admin) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-const firebaseConfig = {
+<script>
+
+var firebaseConfig = {
 apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
 authDomain: "te-logistics-movers.firebaseapp.com",
+databaseURL: "https://te-logistics-movers-default-rtdb.firebaseio.com",
 projectId: "te-logistics-movers",
 storageBucket: "te-logistics-movers.firebasestorage.app",
 messagingSenderId: "1076872105452",
 appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
 
-window.trackShipment = async function(){
-let id=trackInput.value.trim();
-let snap=await get(ref(db,"shipments/"+id));
-if(!snap.exists()){
-result.innerHTML="Tracking not found";
+function trackShipment(){
+
+var id=document.getElementById("trackInput").value;
+
+database.ref("shipments/"+id).once("value", function(snapshot){
+
+if(!snapshot.exists()){
+document.getElementById("result").innerHTML="Tracking not found";
 return;
 }
-let r=snap.val();
 
-let steps=["Shipment Created","Processing","Pending Insurance","In Transit","Out for Delivery","Delivered"];
+var r=snapshot.val();
 
-let html="<h2>"+r.receiver+"</h2>";
+var steps=[
+"Shipment Created",
+"Processing",
+"Pending Insurance",
+"In Transit",
+"Out for Delivery",
+"Delivered"
+];
+
+var html="<h2>"+r.receiver+"</h2>";
 html+="Current Location: "+r.location+"<br>";
 html+="Address: "+r.address+", "+r.city+", "+r.state+", "+r.zip+"<br>";
 html+="Updated: "+r.date+" "+r.time+"<br><br>";
@@ -137,24 +188,33 @@ html+="<strong>Items:</strong><br>"+r.items+"<br><br>";
 html+="<strong>Total Amount:</strong> $"+r.amount+"<br><br>";
 html+="<div class='timeline'>";
 
-steps.forEach((s,i)=>{
+steps.forEach(function(s,i){
+
 if(i<r.status){
 html+="<div class='active'>✔ "+s+"</div>";
 }
-else if(i==r.status && s=="Pending Insurance"){
-html+="<div class='pending'>⚠ "+s+"</div>";
+else if(i==2 && r.status==2){
+html+="<div class='pending'>⚠ Pending Insurance</div>";
 }
 else if(i==r.status){
 html+="<div class='active'>✔ "+s+"</div>";
 }
 else{
+if(!(i==2 && r.status!=2)){
 html+="<div>"+s+"</div>";
 }
+}
+
 });
 
 html+="</div>";
-result.innerHTML=html;
+
+document.getElementById("result").innerHTML=html;
+
+});
+
 }
+
 </script>
 
 </body>
