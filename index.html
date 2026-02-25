@@ -1,9 +1,70 @@
-<!-- KEEP ALL YOUR EXISTING DESIGN ABOVE EXACTLY THE SAME -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TE LOGISTICS MOVERS | Global Tracking</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+
+body{
+background:url('https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1900&q=80') no-repeat center center fixed;
+background-size:cover;
+color:#fff;
+}
+
+.overlay{background:rgba(8,12,25,.88);min-height:100vh}
+
+header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:32px;font-weight:700;letter-spacing:3px}
+nav a{color:#fff;text-decoration:none;margin-left:25px}
+
+.hero{text-align:center;padding:80px 8%}
+.hero h2{font-size:42px;margin-bottom:10px}
+
+.card{
+max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
+padding:40px;border-radius:20px;backdrop-filter:blur(20px);
+box-shadow:0 10px 50px rgba(0,0,0,.5)
+}
+
+input{width:100%;padding:15px;border:none;border-radius:8px;margin-top:15px}
+
+button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);color:#fff;font-weight:600;cursor:pointer}
+
+.timeline{margin-top:25px}
+.timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
+.active{color:#00ffae;font-weight:600}
+.pending{color:#ffd000;font-weight:600}
+</style>
+</head>
+
+<body>
+<div class="overlay">
+
+<header>
+<h1>TE LOGISTICS MOVERS</h1>
+</header>
+
+<section class="hero">
+<h2>Premium Global Shipment Monitoring</h2>
+</section>
+
+<section class="card">
+<h2>Track Your Shipment</h2>
+<input id="trackInput" placeholder="Enter tracking number">
+<button id="trackBtn">Track Shipment</button>
+<div id="result"></div>
+</section>
+
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
@@ -11,12 +72,10 @@ const firebaseConfig = {
   projectId: "te-logistics-movers",
   storageBucket: "te-logistics-movers.firebasestorage.app",
   messagingSenderId: "1076872105452",
-  appId: "1:1076872105452:web:919c3f363dfebd896c84c9",
-  measurementId: "G-GPVKBW8D8D"
+  appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
 };
 
 const app = initializeApp(firebaseConfig);
-getAnalytics(app);
 const db = getDatabase(app);
 
 document.getElementById('trackBtn').addEventListener('click', async ()=>{
@@ -80,3 +139,6 @@ document.getElementById('trackBtn').addEventListener('click', async ()=>{
   document.getElementById('result').innerHTML = html;
 });
 </script>
+
+</body>
+</html>
