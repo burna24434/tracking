@@ -25,6 +25,10 @@ button{width:100%;padding:14px;margin-top:15px;background:#0066ff;border:none;co
 
 <input id="trackId" placeholder="Tracking ID (leave blank to generate)">
 <input id="receiver" placeholder="Receiver">
+
+<!-- NEW ITEMS FIELD -->
+<input id="items" placeholder="Items (e.g. Laptop, Documents, iPhone)">
+
 <input id="location" placeholder="Current location">
 <input id="address" placeholder="Address">
 <input id="city" placeholder="City">
@@ -51,7 +55,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebas
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
   authDomain: "te-logistics-movers.firebaseapp.com",
@@ -62,12 +65,10 @@ const firebaseConfig = {
   measurementId: "G-GPVKBW8D8D"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app);
 const db = getDatabase(app);
 
-// Login
 document.getElementById('loginBtn').addEventListener('click', () => {
   const password = document.getElementById('pass').value;
   if(password === 'admin123'){
@@ -78,53 +79,45 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   }
 });
 
-// Auto-fill shipment info if existing Tracking ID
 document.getElementById('trackId').addEventListener('blur', async () => {
   const id = document.getElementById('trackId').value.trim();
   if(!id) return;
-  try {
-    const snapshot = await get(ref(db,'shipments/'+id));
-    if(snapshot.exists()){
-      const r = snapshot.val();
-      document.getElementById('receiver').value = r.receiver;
-      document.getElementById('location').value = r.location;
-      document.getElementById('address').value = r.address;
-      document.getElementById('city').value = r.city;
-      document.getElementById('state').value = r.state;
-      document.getElementById('zip').value = r.zip;
-      document.getElementById('status').selectedIndex = r.status;
-      document.getElementById('date').value = r.date;
-      document.getElementById('time').value = r.time;
-    }
-  } catch(err){
-    alert("Error reading shipment: "+err.message);
+
+  const snapshot = await get(ref(db,'shipments/'+id));
+  if(snapshot.exists()){
+    const r = snapshot.val();
+    document.getElementById('receiver').value = r.receiver || '';
+    document.getElementById('items').value = r.items || '';
+    document.getElementById('location').value = r.location || '';
+    document.getElementById('address').value = r.address || '';
+    document.getElementById('city').value = r.city || '';
+    document.getElementById('state').value = r.state || '';
+    document.getElementById('zip').value = r.zip || '';
+    document.getElementById('status').selectedIndex = r.status || 0;
+    document.getElementById('date').value = r.date || '';
+    document.getElementById('time').value = r.time || '';
   }
 });
 
-// Save / Update shipment
 document.getElementById('saveBtn').addEventListener('click', async ()=>{
   let id = document.getElementById('trackId').value.trim();
   if(!id) id = 'TL'+Math.floor(Math.random()*999999999);
 
   const shipment = {
-    receiver: document.getElementById('receiver').value,
-    location: document.getElementById('location').value,
-    address: document.getElementById('address').value,
-    city: document.getElementById('city').value,
-    state: document.getElementById('state').value,
-    zip: document.getElementById('zip').value,
+    receiver: document.getElementById('receiver').value || '',
+    items: document.getElementById('items').value || '',
+    location: document.getElementById('location').value || '',
+    address: document.getElementById('address').value || '',
+    city: document.getElementById('city').value || '',
+    state: document.getElementById('state').value || '',
+    zip: document.getElementById('zip').value || '',
     status: document.getElementById('status').selectedIndex,
-    date: document.getElementById('date').value,
-    time: document.getElementById('time').value
+    date: document.getElementById('date').value || '',
+    time: document.getElementById('time').value || ''
   };
 
-  try {
-    await set(ref(db,'shipments/'+id), shipment);
-    document.getElementById('msg').innerText='Saved Tracking: '+id;
-    document.querySelectorAll('#panel input').forEach(input => input.value='');
-  } catch(err){
-    alert('Error saving shipment: '+err.message);
-  }
+  await set(ref(db,'shipments/'+id), shipment);
+  document.getElementById('msg').innerText='Saved Tracking: '+id;
 });
 </script>
 
