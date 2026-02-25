@@ -33,12 +33,28 @@ box-shadow:0 10px 50px rgba(0,0,0,.5)
 
 input{width:100%;padding:15px;border:none;border-radius:8px;margin-top:15px}
 
-button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);color:#fff;font-weight:600;cursor:pointer}
+button{
+width:100%;padding:15px;margin-top:15px;border:none;
+border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);
+color:#fff;font-weight:600;cursor:pointer
+}
+
+.section{padding:80px 8%}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
+
+.about-img{width:100%;border-radius:18px}
+
+.director{display:flex;gap:20px;align-items:center;margin-top:40px}
+.director img{width:130px;border-radius:50%}
 
 .timeline{margin-top:25px}
 .timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
+
 .active{color:#00ffae;font-weight:600}
 .pending{color:#ffd000;font-weight:600}
+
+footer{text-align:center;padding:30px;background:#000}
 </style>
 </head>
 
@@ -47,97 +63,187 @@ button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;bac
 
 <header>
 <h1>TE LOGISTICS MOVERS</h1>
+<nav>
+<a href="#track">Track</a>
+<a href="#about">Company</a>
+<a href="#contact">Contact</a>
+</nav>
 </header>
 
 <section class="hero">
 <h2>Premium Global Shipment Monitoring</h2>
+<p>Secure • Corporate • Advanced Logistics</p>
 </section>
 
-<section class="card">
+<section id="track" class="card">
 <h2>Track Your Shipment</h2>
 <input id="trackInput" placeholder="Enter tracking number">
-<button id="trackBtn">Track Shipment</button>
+<button onclick="track()">Track Shipment</button>
 <div id="result"></div>
 </section>
 
+<section id="about" class="section">
+<div class="grid">
+<div>
+<h2>About Our Company</h2>
+
+<p>
+TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide. 
+Our advanced shipment monitoring systems ensure precision, transparency, and reliability across every delivery.
+</p>
+
+<br>
+
+<p>
+Our corporate freight division specializes in high-value cargo handling, insured transport coordination, international customs documentation, 
+executive relocation services, and strategic supply chain solutions across North America, Europe, Asia and the Middle East.
+</p>
+
+<br>
+
+<p>
+Through our global warehouse network and real-time logistics tracking infrastructure, 
+we maintain operational integrity while meeting strict compliance standards and industry regulations.
+</p>
+
+<br>
+
+<p>
+TE Logistics Movers is committed to excellence, client confidentiality, and secure handling of sensitive shipments. 
+Our mission is to deliver not just cargo — but confidence, trust, and world-class service.
+</p>
+
 </div>
+
+<div>
+<img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
+</div>
+</div>
+
+<div class="director">
+<img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
+<div>
+<h3>Roberto Powell</h3>
+<p>Senior Executive Director</p>
+<p>
+With over 18 years of international logistics leadership experience, Roberto Powell oversees global operations, 
+strategic partnerships, and premium freight compliance standards.
+</p>
+</div>
+</div>
+
+</section>
+
+<section id="contact" class="section">
+<h2>Contact</h2>
+<p>Email: customerservice@telogisticsmovers.com</p>
+</section>
+
+<footer>
+© 2026 TE Logistics Movers
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
-  authDomain: "te-logistics-movers.firebaseapp.com",
-  projectId: "te-logistics-movers",
-  storageBucket: "te-logistics-movers.firebasestorage.app",
-  messagingSenderId: "1076872105452",
-  appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
+apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
+authDomain: "te-logistics-movers.firebaseapp.com",
+projectId: "te-logistics-movers",
+storageBucket: "te-logistics-movers.firebasestorage.app",
+messagingSenderId: "1076872105452",
+appId: "1:1076872105452:web:919c3f363dfebd896c84c9"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-document.getElementById('trackBtn').addEventListener('click', async ()=>{
-  const id = document.getElementById('trackInput').value.trim();
+window.track = async function(){
 
-  if(!id){
-    document.getElementById('result').innerHTML='<h3>Invalid Tracking Number</h3>';
-    return;
-  }
+let id = document.getElementById("trackInput").value.trim();
 
-  const snapshot = await get(ref(db,'shipments/'+id));
+if(id === ""){
+document.getElementById("result").innerHTML = "";
+return;
+}
 
-  if(!snapshot.exists()){
-    document.getElementById('result').innerHTML='<h3>Invalid Tracking Number</h3>';
-    return;
-  }
+let snap = await get(ref(db,"shipments/"+id));
 
-  const r = snapshot.val();
+if(!snap.exists()){
+document.getElementById("result").innerHTML = "Tracking not found";
+return;
+}
 
-  const steps = [
-    'Shipment Created',
-    'Processing',
-    'Pending Insurance',
-    'In Transit',
-    'Out for Delivery',
-    'Delivered'
-  ];
+let r = snap.val();
+window.currentShipment = r;
 
-  let html = '<h2>'+ (r.receiver || '') +'</h2>';
-  html += '<strong>Items:</strong> '+ (r.items || 'Not specified') +'<br><br>';
-  html += 'Current Location: '+ (r.location || '') +'<br>';
-  html += 'Address: '+ (r.address || '') +', '+ (r.city || '') +', '+ (r.state || '') +', '+ (r.zip || '') +'<br>';
-  html += 'Updated: '+ (r.date || '') +' '+ (r.time || '');
+let steps = [
+"Shipment Created",
+"Processing",
+"In Transit",
+"Out for Delivery",
+"Delivered"
+];
 
-  html += '<div class="timeline">';
+if(r.status === 2){
+steps.splice(2,0,"Pending Insurance");
+}
 
-  steps.forEach((s,i)=>{
+let html = "<h2>"+r.receiver+"</h2>";
+html += "Current Location: "+r.location+"<br>";
+html += "Address: "+r.address+", "+r.city+", "+r.state+", "+r.zip+"<br>";
+html += "Updated: "+r.date+" "+r.time+"<br><br>";
 
-    if(s === 'Pending Insurance' && r.status !== 2){
-      return;
-    }
+if(r.items){
+html += "<strong>Items:</strong><br>"+r.items+"<br><br>";
+}
 
-    if(i < r.status){
-      html += "<div class='active'>✔ "+s+"</div>";
-    } 
-    else if(i===r.status){
-      if(s==='Pending Insurance'){
-        html += "<div class='pending'>⚠ "+s+"</div>";
-      } else{
-        html += "<div class='active'>✔ "+s+"</div>";
-      }
-    } 
-    else{
-      html += "<div>"+s+"</div>";
-    }
+html += "<div class='timeline'>";
 
-  });
-
-  html += '</div>';
-
-  document.getElementById('result').innerHTML = html;
+steps.forEach((s,i)=>{
+if(s === "Pending Insurance"){
+html += "<div class='pending'>⚠ "+s+"</div>";
+}
+else{
+html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";
+}
 });
+
+html += "</div>";
+html += "<br><button onclick='downloadInvoice(\""+id+"\")'>Print Invoice</button>";
+
+document.getElementById("result").innerHTML = html;
+}
+
+window.downloadInvoice = function(id){
+
+const { jsPDF } = window.jspdf;
+const doc = new jsPDF();
+const r = window.currentShipment;
+
+doc.setFontSize(18);
+doc.text("TE LOGISTICS MOVERS",20,20);
+doc.setFontSize(12);
+doc.text("Shipment Invoice",20,30);
+doc.line(20,35,190,35);
+
+doc.text("Tracking ID: "+id,20,50);
+doc.text("Receiver: "+r.receiver,20,60);
+doc.text("Location: "+r.location,20,70);
+
+if(r.items){
+doc.text("Items:",20,85);
+doc.text(r.items,20,95);
+}
+
+doc.save("Invoice_"+id+".pdf");
+}
+
 </script>
 
 </body>
