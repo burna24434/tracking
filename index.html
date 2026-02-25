@@ -40,9 +40,7 @@ color:#fff;font-weight:600;cursor:pointer
 }
 
 .section{padding:80px 8%}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
-
 .about-img{width:100%;border-radius:18px}
 
 .director{display:flex;gap:20px;align-items:center;margin-top:40px}
@@ -145,8 +143,6 @@ strategic partnerships, and premium freight compliance standards.
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
@@ -180,7 +176,6 @@ return;
 }
 
 let r = snap.val();
-window.currentShipment = r;
 
 let steps = [
 "Shipment Created",
@@ -215,33 +210,8 @@ html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";
 });
 
 html += "</div>";
-html += "<br><button onclick='downloadInvoice(\""+id+"\")'>Print Invoice</button>";
 
 document.getElementById("result").innerHTML = html;
-}
-
-window.downloadInvoice = function(id){
-
-const { jsPDF } = window.jspdf;
-const doc = new jsPDF();
-const r = window.currentShipment;
-
-doc.setFontSize(18);
-doc.text("TE LOGISTICS MOVERS",20,20);
-doc.setFontSize(12);
-doc.text("Shipment Invoice",20,30);
-doc.line(20,35,190,35);
-
-doc.text("Tracking ID: "+id,20,50);
-doc.text("Receiver: "+r.receiver,20,60);
-doc.text("Location: "+r.location,20,70);
-
-if(r.items){
-doc.text("Items:",20,85);
-doc.text(r.items,20,95);
-}
-
-doc.save("Invoice_"+id+".pdf");
 }
 
 </script>
