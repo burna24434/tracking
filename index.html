@@ -1,120 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TE LOGISTICS MOVERS | Global Tracking</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
-
-body{
-background:url('https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1900&q=80') no-repeat center center fixed;
-background-size:cover;
-color:#fff;
-}
-
-.overlay{background:rgba(8,12,25,.88);min-height:100vh}
-
-header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
-
-header h1{font-size:32px;font-weight:700;letter-spacing:3px}
-
-nav a{color:#fff;text-decoration:none;margin-left:25px}
-
-.hero{text-align:center;padding:80px 8%}
-.hero h2{font-size:42px;margin-bottom:10px}
-
-.card{
-max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
-padding:40px;border-radius:20px;backdrop-filter:blur(20px);
-box-shadow:0 10px 50px rgba(0,0,0,.5)
-}
-
-input{width:100%;padding:15px;border:none;border-radius:8px;margin-top:15px}
-
-button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);color:#fff;font-weight:600;cursor:pointer}
-
-.section{padding:80px 8%}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
-
-.about-img{width:100%;border-radius:18px}
-
-.director{display:flex;gap:20px;align-items:center}
-
-.director img{width:130px;border-radius:50%}
-
-.timeline{margin-top:25px}
-.timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
-
-.active{color:#00ffae;font-weight:600}
-.pending{color:#ffd000;font-weight:600}
-
-footer{text-align:center;padding:30px;background:#000}
-</style>
-</head>
-
-<body>
-<div class="overlay">
-
-<header>
-<h1>TE LOGISTICS MOVERS</h1>
-<nav>
-<a href="#track">Track</a>
-<a href="#about">Company</a>
-<a href="#contact">Contact</a>
-</nav>
-</header>
-
-<section class="hero">
-<h2>Premium Global Shipment Monitoring</h2>
-<p>Secure • Corporate • Advanced Logistics</p>
-</section>
-
-<section id="track" class="card">
-<h2>Track Your Shipment</h2>
-<input id="trackInput" placeholder="Enter tracking number">
-<button id="trackBtn">Track Shipment</button>
-<div id="result"></div>
-</section>
-
-<section id="about" class="section">
-<div class="grid">
-<div>
-<h2>About Our Company</h2>
-<p>
-TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide. Our advanced shipment monitoring and warehouse networks guarantee safe, timely delivery.
-</p>
-</div>
-<div>
-<img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
-</div>
-</div>
-
-<br><br>
-
-<div class="director">
-<img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
-<div>
-<h3>Roberto Powell</h3>
-<p>Senior Executive Director</p>
-</div>
-</div>
-</section>
-
-<section id="contact" class="section">
-<h2>Contact</h2>
-<p>Email: customerservice@telogisticsmovers.com</p>
-</section>
-
-<footer>
-© 2026 TE Logistics Movers
-</footer>
-
-</div>
+<!-- KEEP ALL YOUR EXISTING DESIGN ABOVE EXACTLY THE SAME -->
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
@@ -132,50 +16,67 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app);
 const db = getDatabase(app);
 
 document.getElementById('trackBtn').addEventListener('click', async ()=>{
   const id = document.getElementById('trackInput').value.trim();
-  try {
-    const snapshot = await get(ref(db,'shipments/'+id));
-    if(!snapshot.exists()){
-      document.getElementById('result').innerHTML='Tracking not found';
+
+  if(!id){
+    document.getElementById('result').innerHTML='<h3>Invalid Tracking Number</h3>';
+    return;
+  }
+
+  const snapshot = await get(ref(db,'shipments/'+id));
+
+  if(!snapshot.exists()){
+    document.getElementById('result').innerHTML='<h3>Invalid Tracking Number</h3>';
+    return;
+  }
+
+  const r = snapshot.val();
+
+  const steps = [
+    'Shipment Created',
+    'Processing',
+    'Pending Insurance',
+    'In Transit',
+    'Out for Delivery',
+    'Delivered'
+  ];
+
+  let html = '<h2>'+ (r.receiver || '') +'</h2>';
+  html += '<strong>Items:</strong> '+ (r.items || 'Not specified') +'<br><br>';
+  html += 'Current Location: '+ (r.location || '') +'<br>';
+  html += 'Address: '+ (r.address || '') +', '+ (r.city || '') +', '+ (r.state || '') +', '+ (r.zip || '') +'<br>';
+  html += 'Updated: '+ (r.date || '') +' '+ (r.time || '');
+
+  html += '<div class="timeline">';
+
+  steps.forEach((s,i)=>{
+
+    if(s === 'Pending Insurance' && r.status !== 2){
       return;
     }
-    const r = snapshot.val();
-    const steps = [
-      'Shipment Created',
-      'Processing',
-      'Pending Insurance',
-      'In Transit',
-      'Out for Delivery',
-      'Delivered'
-    ];
-    let html = '<h2>'+r.receiver+'</h2>';
-    html += 'Current Location: '+r.location+'<br>';
-    html += 'Address: '+r.address+', '+r.city+', '+r.state+', '+r.zip+'<br>';
-    html += 'Updated: '+r.date+' '+r.time;
-    html += '<div class="timeline">';
-    steps.forEach((s,i)=>{
-      if(i < r.status){
-        html += "<div class='active'>✔ "+s+"</div>";
-      } else if(i===r.status && s==='Pending Insurance'){
+
+    if(i < r.status){
+      html += "<div class='active'>✔ "+s+"</div>";
+    } 
+    else if(i===r.status){
+      if(s==='Pending Insurance'){
         html += "<div class='pending'>⚠ "+s+"</div>";
-      } else if(i===r.status){
-        html += "<div class='active'>✔ "+s+"</div>";
       } else{
-        html += "<div>"+s+"</div>";
+        html += "<div class='active'>✔ "+s+"</div>";
       }
-    });
-    html += '</div>';
-    document.getElementById('result').innerHTML = html;
-  } catch(err){
-    alert('Error reading shipment: '+err.message);
-  }
+    } 
+    else{
+      html += "<div>"+s+"</div>";
+    }
+
+  });
+
+  html += '</div>';
+
+  document.getElementById('result').innerHTML = html;
 });
 </script>
-
-</body>
-</html>
-
