@@ -14,64 +14,89 @@ body{
 background:url('https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1900&q=80') no-repeat center center fixed;
 background-size:cover;
 color:#fff;
+overflow-x:hidden;
 }
 
-.overlay{background:rgba(8,12,25,.88);min-height:100vh}
+.overlay{background:rgba(8,12,25,.75);min-height:100vh}
 
-/* AIRFLOW */
-.airflow{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:0}
-.airflow span{position:absolute;width:2px;height:80px;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(0,198,255,0.8));animation:fly 6s linear infinite;opacity:.4}
-@keyframes fly{0%{transform:translateY(-100px)}100%{transform:translateY(100vh)}}
+/* HERO GLASS */
+.hero{
+height:80vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+}
+
+.glass{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:20px;
+backdrop-filter:blur(20px);
+box-shadow:0 10px 40px rgba(0,0,0,0.5);
+width:100%;
+max-width:600px;
+}
+
+.glass input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+margin-top:10px;
+}
+
+.glass button{
+width:100%;
+padding:15px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:linear-gradient(45deg,#ff9f00,#ffcc00);
+color:#000;
+font-weight:600;
+cursor:pointer;
+}
 
 /* REAL PLANE */
-.plane{
+.real-plane{
 position:fixed;
-top:20%;
-left:-300px;
-width:180px;
+top:18%;
+left:-400px;
+width:260px;
 z-index:2;
-animation:planeMove 30s linear infinite;
+filter:drop-shadow(0 20px 25px rgba(0,0,0,0.6));
+animation:flyReal 35s linear infinite;
 }
 
-@keyframes planeMove{
-0%{transform:translateX(0) translateY(0)}
-50%{transform:translateX(60vw) translateY(-40px)}
-100%{transform:translateX(120vw) translateY(0)}
+@keyframes flyReal{
+0%{transform:translateX(0) translateY(0) scale(0.9)}
+50%{transform:translateX(60vw) translateY(-60px) scale(1)}
+100%{transform:translateX(130vw) translateY(0) scale(0.95)}
 }
 
-header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
-header h1{font-size:32px;font-weight:700;letter-spacing:3px}
-nav a{color:#fff;text-decoration:none;margin-left:25px}
-
-.hero{text-align:center;padding:80px 8%}
-.hero h2{font-size:42px;margin-bottom:10px}
-
-.card{
-max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
-padding:40px;border-radius:20px;backdrop-filter:blur(20px);
-box-shadow:0 10px 50px rgba(0,0,0,.5)
-}
-
-input{width:100%;padding:15px;border:none;border-radius:8px;margin-top:15px}
-
-button{
-width:100%;padding:15px;margin-top:15px;border:none;
-border-radius:8px;background:linear-gradient(45deg,#0066ff,#00c6ff);
-color:#fff;font-weight:600;cursor:pointer
-}
+header{padding:25px 8%;display:flex;justify-content:space-between}
+nav a{color:#fff;text-decoration:none;margin-left:20px}
 
 .section{padding:80px 8%}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:40px}
-.about-img{width:100%;border-radius:18px}
 
-.director{display:flex;gap:20px;align-items:center;margin-top:40px}
-.director img{width:130px;border-radius:50%}
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-top:40px;
+}
 
-.timeline{margin-top:25px}
-.timeline div{padding:12px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:18px}
-
-.active{color:#00ffae;font-weight:600}
-.pending{color:#ffd000;font-weight:600}
+.card-box{
+background:#fff;
+color:#000;
+padding:25px;
+border-radius:15px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
 
 footer{text-align:center;padding:30px;background:#000}
 </style>
@@ -80,86 +105,54 @@ footer{text-align:center;padding:30px;background:#000}
 <body>
 <div class="overlay">
 
-<div class="airflow">
-<span style="left:10%"></span>
-<span style="left:30%"></span>
-<span style="left:50%"></span>
-<span style="left:70%"></span>
-<span style="left:90%"></span>
-</div>
-
-<!-- REAL PLANE IMAGE -->
-<img class="plane" src="https://pngimg.com/uploads/airplane/airplane_PNG101.png">
+<img class="real-plane" src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=800&q=80">
 
 <header>
 <h1>TE LOGISTICS MOVERS</h1>
 <nav>
-<a href="#track">Track</a>
-<a href="#about">Company</a>
 <a href="#contact">Contact</a>
+<a href="#about">Company</a>
 </nav>
 </header>
 
 <section class="hero">
 <h2>Premium Global Shipment Monitoring</h2>
 <p>Secure • Corporate • Advanced Logistics</p>
-</section>
 
-<section id="track" class="card">
-<h2>Track Your Shipment</h2>
+<div class="glass">
 <input id="trackInput" placeholder="Enter tracking number">
-<button onclick="track()">Track Shipment</button>
+<button onclick="track()">Track</button>
 <div id="result"></div>
+</div>
 </section>
 
-<!-- CONTACT FIRST -->
+<section class="section">
+<div class="cards">
+<div class="card-box">
+<h3>Fast Delivery</h3>
+<p>Get your packages quickly</p>
+</div>
+<div class="card-box">
+<h3>Global Shipping</h3>
+<p>Ship to over 200 countries</p>
+</div>
+<div class="card-box">
+<h3>24/7 Support</h3>
+<p>Always available for you</p>
+</div>
+</div>
+</section>
+
 <section id="contact" class="section">
 <h2>Contact</h2>
 <p>Email: customerservice@telogisticsmovers.com</p>
 </section>
 
-<!-- ABOUT NOW BELOW CONTACT -->
 <section id="about" class="section">
-<div class="grid">
-<div>
 <h2>About Our Company</h2>
 <p>
-TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.
-Our advanced shipment monitoring systems ensure precision, transparency, and reliability across every delivery.
+TE Logistics Movers is a luxury international logistics provider delivering secure cargo worldwide with advanced tracking systems.
 </p>
-<br>
-<p>
-Our corporate freight division specializes in high-value cargo handling, insured transport coordination, international customs documentation,
-executive relocation services, and strategic supply chain solutions across North America, Europe, Asia and the Middle East.
-</p>
-<br>
-<p>
-Through our global warehouse network and real-time logistics tracking infrastructure,
-we maintain operational integrity while meeting strict compliance standards and industry regulations.
-</p>
-<br>
-<p>
-TE Logistics Movers is committed to excellence, client confidentiality, and secure handling of sensitive shipments.
-Our mission is to deliver not just cargo — but confidence, trust, and world-class service.
-</p>
-</div>
-
-<div>
-<img class="about-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=80">
-</div>
-</div>
-
-<div class="director">
-<img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
-<div>
-<h3>Roberto Powell</h3>
-<p>Senior Executive Director</p>
-<p>
-With over 18 years of international logistics leadership experience, Roberto Powell oversees global operations,
-strategic partnerships, and premium freight compliance standards.
-</p>
-</div>
-</div>
 </section>
 
 <footer>
@@ -191,26 +184,9 @@ let snap = await get(ref(db,"shipments/"+id));
 if(!snap.exists()){document.getElementById("result").innerHTML = "Tracking not found";return;}
 let r = snap.val();
 
-let steps = ["Shipment Created","Processing","Pending Insurance","In Transit","Out for Delivery","Delivered"];
-
-let html = "<h2>"+r.receiver+"</h2>";
-html += "Current Location: "+r.location+"<br>";
-html += "Address: "+r.address+", "+r.city+", "+r.state+", "+r.zip+"<br>";
-html += "Updated: "+r.date+" "+r.time+"<br><br>";
-
-if(r.items){
-html += "<strong>Items:</strong><br>"+r.items+"<br><br>";
-}
-
-html += "<div class='timeline'>";
-steps.forEach((s,i)=>{
-if(s === "Pending Insurance"){
-html += "<div class='pending'>⚠ "+s+"</div>";
-}else{
-html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";
-}
-});
-html += "</div>";
+let html = "<h3>"+r.receiver+"</h3>";
+html += "Location: "+r.location+"<br>";
+html += "Updated: "+r.date+" "+r.time;
 
 document.getElementById("result").innerHTML = html;
 }
