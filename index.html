@@ -19,16 +19,13 @@ overflow-x:hidden;
 
 .overlay{background:rgba(8,12,25,.88);min-height:100vh}
 
-/* HEADER */
 header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
 header h1{font-size:32px;font-weight:700;letter-spacing:3px}
 nav a{color:#fff;text-decoration:none;margin-left:25px}
 
-/* HERO */
 .hero{text-align:center;padding:80px 8%}
 .hero h2{font-size:42px;margin-bottom:10px}
 
-/* CARD */
 .card{
 max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
 padding:40px;border-radius:20px;backdrop-filter:blur(20px);
@@ -51,7 +48,7 @@ background:rgba(0,0,0,.35);
 border-radius:12px;
 }
 
-/* PROGRESS BAR */
+/* PROGRESS */
 .progress{
 height:8px;
 background:#222;
@@ -71,18 +68,30 @@ background:#00c6ff;
 .active{color:#00ffae;font-weight:600}
 .pending{color:#ffd000;font-weight:600}
 
-/* PLANE TRACKING */
-.plane-track{
+/* REAL PLANE TRACK */
+.route{
 position:relative;
-height:60px;
-margin:20px 0;
+height:80px;
+margin:25px 0;
+}
+
+.route-line{
+position:absolute;
+top:40px;
+left:0;
+width:100%;
+height:3px;
+background:linear-gradient(to right,#00c6ff,#0066ff);
+border-radius:10px;
 }
 
 .plane{
 position:absolute;
-top:-10px;
-font-size:28px;
+top:10px;
+left:0;
+width:60px;
 transition:1s linear;
+filter:drop-shadow(0 10px 15px rgba(0,0,0,.6));
 }
 
 /* ABOUT */
@@ -248,8 +257,9 @@ let html = `
 <div class="progress-fill" style="width:${progress}%"></div>
 </div>
 
-<div class="plane-track">
-<div class="plane" id="plane">✈️</div>
+<div class="route">
+<div class="route-line"></div>
+<img id="plane" class="plane" src="https://cdn-icons-png.flaticon.com/512/34/34627.png">
 </div>
 `;
 
@@ -273,7 +283,7 @@ html += `</div>`;
 
 document.getElementById("result").innerHTML = html;
 
-// MOVE PLANE BASED ON PROGRESS
+// move plane
 setTimeout(()=>{
 let plane = document.getElementById("plane");
 if(plane){
