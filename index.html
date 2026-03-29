@@ -1,4 +1,3 @@
-<!-- ======================= INDEX (UPDATED WITH AIRPLANE) ======================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,48 +18,25 @@ color:#fff;
 
 .overlay{background:rgba(8,12,25,.88);min-height:100vh}
 
-/* AIRFLOW EFFECT */
-.airflow {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-pointer-events: none;
-overflow: hidden;
-z-index: 0;
+/* AIRFLOW */
+.airflow{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:0}
+.airflow span{position:absolute;width:2px;height:80px;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(0,198,255,0.8));animation:fly 6s linear infinite;opacity:.4}
+@keyframes fly{0%{transform:translateY(-100px)}100%{transform:translateY(100vh)}}
+
+/* REAL PLANE */
+.plane{
+position:fixed;
+top:20%;
+left:-300px;
+width:180px;
+z-index:2;
+animation:planeMove 30s linear infinite;
 }
 
-.airflow span {
-position: absolute;
-display: block;
-width: 2px;
-height: 80px;
-background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,198,255,0.8));
-animation: fly 6s linear infinite;
-opacity: 0.4;
-}
-
-@keyframes fly {
-0% {transform: translateY(-100px) translateX(0);opacity: 0;}
-20% {opacity: 1;}
-100% {transform: translateY(100vh) translateX(200px);opacity: 0;}
-}
-
-/* AIRPLANE ANIMATION */
-.airplane {
-position: fixed;
-top: 20%;
-left: -150px;
-font-size: 40px;
-z-index: 1;
-animation: planeFly 12s linear infinite;
-}
-
-@keyframes planeFly {
-0% {transform: translateX(0) translateY(0) rotate(10deg);}
-50% {transform: translateX(60vw) translateY(-40px) rotate(5deg);}
-100% {transform: translateX(120vw) translateY(0) rotate(10deg);}
+@keyframes planeMove{
+0%{transform:translateX(0) translateY(0)}
+50%{transform:translateX(60vw) translateY(-40px)}
+100%{transform:translateX(120vw) translateY(0)}
 }
 
 header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
@@ -104,18 +80,16 @@ footer{text-align:center;padding:30px;background:#000}
 <body>
 <div class="overlay">
 
-<!-- AIRFLOW HTML -->
 <div class="airflow">
-<span style="left:10%; animation-delay:0s;"></span>
-<span style="left:25%; animation-delay:1s;"></span>
-<span style="left:40%; animation-delay:2s;"></span>
-<span style="left:60%; animation-delay:0.5s;"></span>
-<span style="left:75%; animation-delay:1.5s;"></span>
-<span style="left:90%; animation-delay:2.5s;"></span>
+<span style="left:10%"></span>
+<span style="left:30%"></span>
+<span style="left:50%"></span>
+<span style="left:70%"></span>
+<span style="left:90%"></span>
 </div>
 
-<!-- AIRPLANE -->
-<div class="airplane">✈️</div>
+<!-- REAL PLANE IMAGE -->
+<img class="plane" src="https://pngimg.com/uploads/airplane/airplane_PNG101.png">
 
 <header>
 <h1>TE LOGISTICS MOVERS</h1>
@@ -138,7 +112,13 @@ footer{text-align:center;padding:30px;background:#000}
 <div id="result"></div>
 </section>
 
-<!-- ABOUT MOVED DOWN -->
+<!-- CONTACT FIRST -->
+<section id="contact" class="section">
+<h2>Contact</h2>
+<p>Email: customerservice@telogisticsmovers.com</p>
+</section>
+
+<!-- ABOUT NOW BELOW CONTACT -->
 <section id="about" class="section">
 <div class="grid">
 <div>
@@ -182,11 +162,6 @@ strategic partnerships, and premium freight compliance standards.
 </div>
 </section>
 
-<section id="contact" class="section">
-<h2>Contact</h2>
-<p>Email: customerservice@telogisticsmovers.com</p>
-</section>
-
 <footer>
 © 2026 TE Logistics Movers
 </footer>
@@ -215,18 +190,28 @@ if(id === ""){document.getElementById("result").innerHTML = "";return;}
 let snap = await get(ref(db,"shipments/"+id));
 if(!snap.exists()){document.getElementById("result").innerHTML = "Tracking not found";return;}
 let r = snap.val();
+
 let steps = ["Shipment Created","Processing","Pending Insurance","In Transit","Out for Delivery","Delivered"];
+
 let html = "<h2>"+r.receiver+"</h2>";
 html += "Current Location: "+r.location+"<br>";
 html += "Address: "+r.address+", "+r.city+", "+r.state+", "+r.zip+"<br>";
 html += "Updated: "+r.date+" "+r.time+"<br><br>";
-if(r.items){html += "<strong>Items:</strong><br>"+r.items+"<br><br>";}
+
+if(r.items){
+html += "<strong>Items:</strong><br>"+r.items+"<br><br>";
+}
+
 html += "<div class='timeline'>";
 steps.forEach((s,i)=>{
-if(s === "Pending Insurance"){html += "<div class='pending'>⚠ "+s+"</div>";}
-else{html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";}
+if(s === "Pending Insurance"){
+html += "<div class='pending'>⚠ "+s+"</div>";
+}else{
+html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";
+}
 });
 html += "</div>";
+
 document.getElementById("result").innerHTML = html;
 }
 </script>
