@@ -1,3 +1,4 @@
+<!-- ======================= INDEX (UPDATED WITH AIRPLANE) ======================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,50 @@ color:#fff;
 }
 
 .overlay{background:rgba(8,12,25,.88);min-height:100vh}
+
+/* AIRFLOW EFFECT */
+.airflow {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+overflow: hidden;
+z-index: 0;
+}
+
+.airflow span {
+position: absolute;
+display: block;
+width: 2px;
+height: 80px;
+background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,198,255,0.8));
+animation: fly 6s linear infinite;
+opacity: 0.4;
+}
+
+@keyframes fly {
+0% {transform: translateY(-100px) translateX(0);opacity: 0;}
+20% {opacity: 1;}
+100% {transform: translateY(100vh) translateX(200px);opacity: 0;}
+}
+
+/* AIRPLANE ANIMATION */
+.airplane {
+position: fixed;
+top: 20%;
+left: -150px;
+font-size: 40px;
+z-index: 1;
+animation: planeFly 12s linear infinite;
+}
+
+@keyframes planeFly {
+0% {transform: translateX(0) translateY(0) rotate(10deg);}
+50% {transform: translateX(60vw) translateY(-40px) rotate(5deg);}
+100% {transform: translateX(120vw) translateY(0) rotate(10deg);}
+}
 
 header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
 header h1{font-size:32px;font-weight:700;letter-spacing:3px}
@@ -59,6 +104,19 @@ footer{text-align:center;padding:30px;background:#000}
 <body>
 <div class="overlay">
 
+<!-- AIRFLOW HTML -->
+<div class="airflow">
+<span style="left:10%; animation-delay:0s;"></span>
+<span style="left:25%; animation-delay:1s;"></span>
+<span style="left:40%; animation-delay:2s;"></span>
+<span style="left:60%; animation-delay:0.5s;"></span>
+<span style="left:75%; animation-delay:1.5s;"></span>
+<span style="left:90%; animation-delay:2.5s;"></span>
+</div>
+
+<!-- AIRPLANE -->
+<div class="airplane">✈️</div>
+
 <header>
 <h1>TE LOGISTICS MOVERS</h1>
 <nav>
@@ -80,37 +138,30 @@ footer{text-align:center;padding:30px;background:#000}
 <div id="result"></div>
 </section>
 
+<!-- ABOUT MOVED DOWN -->
 <section id="about" class="section">
 <div class="grid">
 <div>
 <h2>About Our Company</h2>
-
 <p>
-TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide. 
+TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide.
 Our advanced shipment monitoring systems ensure precision, transparency, and reliability across every delivery.
 </p>
-
 <br>
-
 <p>
-Our corporate freight division specializes in high-value cargo handling, insured transport coordination, international customs documentation, 
+Our corporate freight division specializes in high-value cargo handling, insured transport coordination, international customs documentation,
 executive relocation services, and strategic supply chain solutions across North America, Europe, Asia and the Middle East.
 </p>
-
 <br>
-
 <p>
-Through our global warehouse network and real-time logistics tracking infrastructure, 
+Through our global warehouse network and real-time logistics tracking infrastructure,
 we maintain operational integrity while meeting strict compliance standards and industry regulations.
 </p>
-
 <br>
-
 <p>
-TE Logistics Movers is committed to excellence, client confidentiality, and secure handling of sensitive shipments. 
+TE Logistics Movers is committed to excellence, client confidentiality, and secure handling of sensitive shipments.
 Our mission is to deliver not just cargo — but confidence, trust, and world-class service.
 </p>
-
 </div>
 
 <div>
@@ -124,12 +175,11 @@ Our mission is to deliver not just cargo — but confidence, trust, and world-cl
 <h3>Roberto Powell</h3>
 <p>Senior Executive Director</p>
 <p>
-With over 18 years of international logistics leadership experience, Roberto Powell oversees global operations, 
+With over 18 years of international logistics leadership experience, Roberto Powell oversees global operations,
 strategic partnerships, and premium freight compliance standards.
 </p>
 </div>
 </div>
-
 </section>
 
 <section id="contact" class="section">
@@ -160,60 +210,25 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.track = async function(){
-
 let id = document.getElementById("trackInput").value.trim();
-
-if(id === ""){
-document.getElementById("result").innerHTML = "";
-return;
-}
-
+if(id === ""){document.getElementById("result").innerHTML = "";return;}
 let snap = await get(ref(db,"shipments/"+id));
-
-if(!snap.exists()){
-document.getElementById("result").innerHTML = "Tracking not found";
-return;
-}
-
+if(!snap.exists()){document.getElementById("result").innerHTML = "Tracking not found";return;}
 let r = snap.val();
-
-let steps = [
-"Shipment Created",
-"Processing",
-"In Transit",
-"Out for Delivery",
-"Delivered"
-];
-
-if(r.status === 2){
-steps.splice(2,0,"Pending Insurance");
-}
-
+let steps = ["Shipment Created","Processing","Pending Insurance","In Transit","Out for Delivery","Delivered"];
 let html = "<h2>"+r.receiver+"</h2>";
 html += "Current Location: "+r.location+"<br>";
 html += "Address: "+r.address+", "+r.city+", "+r.state+", "+r.zip+"<br>";
 html += "Updated: "+r.date+" "+r.time+"<br><br>";
-
-if(r.items){
-html += "<strong>Items:</strong><br>"+r.items+"<br><br>";
-}
-
+if(r.items){html += "<strong>Items:</strong><br>"+r.items+"<br><br>";}
 html += "<div class='timeline'>";
-
 steps.forEach((s,i)=>{
-if(s === "Pending Insurance"){
-html += "<div class='pending'>⚠ "+s+"</div>";
-}
-else{
-html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";
-}
+if(s === "Pending Insurance"){html += "<div class='pending'>⚠ "+s+"</div>";}
+else{html += "<div class='"+(i <= r.status ? "active" : "")+"'>✔ "+s+"</div>";}
 });
-
 html += "</div>";
-
 document.getElementById("result").innerHTML = html;
 }
-
 </script>
 
 </body>
