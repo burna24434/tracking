@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TE LOGISTICS MOVERS</title>
+<title>TE LOGISTICS MOVERS | Global Tracking</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -19,28 +19,42 @@ overflow-x:hidden;
 
 .overlay{background:rgba(8,12,25,.88);min-height:100vh}
 
-/* HEADER */
-header{padding:25px 8%;display:flex;justify-content:space-between}
-nav a{color:#fff;text-decoration:none;margin-left:20px}
+header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:32px;font-weight:700}
+nav a{color:#fff;text-decoration:none;margin-left:25px}
 
-/* HERO */
 .hero{text-align:center;padding:80px 8%}
+.hero h2{font-size:42px;margin-bottom:10px}
 
-/* CARD */
 .card{
 max-width:900px;margin:40px auto;background:rgba(255,255,255,.07);
 padding:40px;border-radius:20px;backdrop-filter:blur(20px);
+box-shadow:0 10px 50px rgba(0,0,0,.5)
 }
 
-/* BUTTON */
+input,button{
+width:100%;padding:15px;border:none;border-radius:8px;margin-top:10px
+}
+
 button{
-width:100%;padding:15px;margin-top:10px;
-border:none;border-radius:8px;
 background:linear-gradient(45deg,#0066ff,#00c6ff);
 color:#fff;font-weight:600;cursor:pointer
 }
 
-/* SERVICES */
+/* RESULT */
+#result{
+margin-top:25px;
+padding:20px;
+background:rgba(0,0,0,.35);
+border-radius:12px;
+}
+
+/* TIMELINE */
+.timeline{margin-top:20px}
+.timeline div{padding:10px;border-left:3px solid #00c6ff;margin-left:10px;padding-left:15px}
+.active{color:#00ffae;font-weight:600}
+
+/* SERVICE CARDS */
 .services{
 padding:60px 8%;
 display:flex;
@@ -57,11 +71,11 @@ padding:25px;
 border-radius:20px;
 text-align:center;
 box-shadow:0 15px 40px rgba(0,0,0,0.3);
-transition:.4s;
+transition:.3s;
 }
 
 .service-card:hover{
-transform:translateY(-10px);
+transform:translateY(-8px);
 }
 
 .service-card img{
@@ -69,52 +83,24 @@ width:90px;
 margin-bottom:15px;
 }
 
+.service-card h3{
+margin-bottom:10px;
+}
+
+.service-card p{
+font-size:14px;
+color:#555;
+margin-bottom:15px;
+}
+
 .service-card button{
 background:linear-gradient(45deg,#ff9f00,#ffcc00);
 color:#000;
+font-weight:600;
 border-radius:20px;
 padding:10px 20px;
-}
-
-/* ===== FULL PAGE SECTION ===== */
-.page{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#0c1c3a;
-z-index:999;
-padding:80px 20px;
-overflow:auto;
-display:none;
-animation:fadeIn .6s ease;
-}
-
-.page-content{
-max-width:900px;
-margin:auto;
-}
-
-.page h1{margin-bottom:20px}
-.page p{line-height:1.7;margin-bottom:20px;color:#ddd}
-
-/* CLOSE BUTTON */
-.close-btn{
-margin-top:20px;
-padding:12px 20px;
-background:#00c6ff;
-border:none;
-border-radius:8px;
 cursor:pointer;
-color:#000;
-font-weight:600;
-}
-
-/* ANIMATION */
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(40px)}
-to{opacity:1;transform:translateY(0)}
+border:none;
 }
 
 /* ABOUT */
@@ -135,7 +121,9 @@ footer{text-align:center;padding:30px;background:#000}
 <header>
 <h1>TE LOGISTICS MOVERS</h1>
 <nav>
-<a href="#">Home</a>
+<a href="#track">Track</a>
+<a href="#about">Company</a>
+<a href="#contact">Contact</a>
 </nav>
 </header>
 
@@ -144,83 +132,70 @@ footer{text-align:center;padding:30px;background:#000}
 <p>Secure • Fast • Global Logistics</p>
 </section>
 
-<section class="card">
-<h2>Tracking System</h2>
-<button onclick="alert('Tracking system connected')">Track Shipment</button>
+<section id="track" class="card">
+<h2>Track Shipment</h2>
+<input id="trackInput" placeholder="Enter tracking number">
+<button onclick="track()">Track</button>
+<div id="result"></div>
 </section>
 
-<!-- SERVICES -->
+<!-- SERVICE CARDS -->
 <section class="services">
 
 <div class="service-card">
 <img src="https://cdn-icons-png.flaticon.com/512/743/743007.png">
 <h3>Fast Delivery</h3>
-<p>Get your packages delivered quickly worldwide.</p>
+<p>Get your packages delivered quickly and safely worldwide.</p>
 <button>Learn More</button>
 </div>
 
 <div class="service-card">
 <img src="https://cdn-icons-png.flaticon.com/512/3211/3211458.png">
 <h3>Global Shipping</h3>
-<p>Ship to over 200 countries securely.</p>
-<button onclick="openGlobal()">Learn More</button>
+<p>We ship to over 200 countries with secure handling.</p>
+<button>Learn More</button>
 </div>
 
 <div class="service-card">
 <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png">
 <h3>24/7 Support</h3>
-<p>Always available to assist you.</p>
+<p>Our team is always available to assist your shipment.</p>
 <button>Contact Us</button>
 </div>
 
 </section>
 
-<!-- ===== GLOBAL SHIPPING PAGE ===== -->
-<div id="globalPage" class="page">
-
-<div class="page-content">
-
-<h1>Global Shipping</h1>
-
-<p>
-TE Logistics Movers delivers advanced global shipping solutions designed to move cargo efficiently across international borders with maximum security and reliability.
-</p>
-
-<p>
-Our logistics network spans over 200 countries, ensuring seamless delivery through optimized routes and professional coordination.
-</p>
-
-<p>
-We provide customs handling, secure packaging, real-time tracking, and full shipment monitoring to guarantee transparency and safety.
-</p>
-
-<p>
-Whether personal goods or high-value cargo, every shipment is managed with precision, compliance, and professional care.
-</p>
-
-<button class="close-btn" onclick="closeGlobal()">Back</button>
-
-</div>
-
-</div>
-
-<!-- ABOUT -->
-<section class="section">
+<!-- ✅ FULL ABOUT RESTORED -->
+<section id="about" class="section">
 <div class="grid">
 
 <div>
 <h2>About Our Company</h2>
 
 <p>
-TE Logistics Movers is a luxury international logistics provider delivering secure cargo worldwide with advanced tracking systems.
+TE Logistics Movers is a luxury international logistics and relocation provider delivering secure cargo movement worldwide. 
+Our advanced shipment monitoring systems ensure precision, transparency, and reliability across every delivery.
 </p>
 
-<p>
-Our services include high-value cargo handling, global shipping, and supply chain solutions across multiple continents.
-</p>
+<br>
 
 <p>
-We are committed to delivering trust, reliability, and world-class logistics service.
+Our corporate freight division specializes in high-value cargo handling, insured transport coordination, international customs documentation, 
+executive relocation services, and strategic supply chain solutions across North America, Europe, Asia and the Middle East.
+</p>
+
+<br>
+
+<p>
+Through our global warehouse network and real-time logistics tracking infrastructure, 
+we maintain operational integrity while meeting strict compliance standards and industry regulations.
+</p>
+
+<br>
+
+<p>
+TE Logistics Movers is committed to excellence, client confidentiality, and secure handling of sensitive shipments. 
+Our mission is to deliver not just cargo — but confidence, trust, and world-class service.
 </p>
 
 </div>
@@ -231,31 +206,76 @@ We are committed to delivering trust, reliability, and world-class logistics ser
 
 </div>
 
+<!-- ✅ FULL DIRECTOR RESTORED -->
 <div class="director">
 <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80">
 <div>
 <h3>Roberto Powell</h3>
 <p>Senior Executive Director</p>
+
 <p>
-With over 18 years of international logistics experience, Roberto oversees global operations and strategic partnerships.
+With over 18 years of international logistics leadership experience, Roberto Powell oversees global operations, 
+strategic partnerships, and premium freight compliance standards. His expertise ensures TE Logistics Movers maintains 
+its reputation as a trusted and secure global logistics provider.
 </p>
+
 </div>
 </div>
+
+</section>
+
+<section id="contact" class="section">
+<h2>Contact</h2>
+<p>Email: customerservice@telogisticsmovers.com</p>
 </section>
 
 <footer>
-© 2026 TE LOGISTICS MOVERS
+© 2026 TE Logistics Movers
 </footer>
 
 </div>
 
-<script>
-function openGlobal(){
-document.getElementById("globalPage").style.display = "block";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyAzSMdTO_vFHOaI3PLMm6WU2ca2GaBZwnA",
+authDomain: "te-logistics-movers.firebaseapp.com",
+projectId: "te-logistics-movers"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.track = async function(){
+
+let id = document.getElementById("trackInput").value.trim();
+if(id === "") return;
+
+let snap = await get(ref(db,"shipments/"+id));
+
+if(!snap.exists()){
+document.getElementById("result").innerHTML = "Tracking not found";
+return;
 }
 
-function closeGlobal(){
-document.getElementById("globalPage").style.display = "none";
+let r = snap.val();
+
+let steps = ["Created","Processing","In Transit","Out for Delivery","Delivered"];
+
+let html = `<h3>${r.receiver}</h3>
+<p><strong>Location:</strong> ${r.location}</p>
+<p><strong>Updated:</strong> ${r.date} ${r.time}</p>
+<div class="timeline">`;
+
+steps.forEach((s,i)=>{
+html += `<div class="${i <= r.status ? "active" : ""}">✔ ${s}</div>`;
+});
+
+html += `</div>`;
+
+document.getElementById("result").innerHTML = html;
 }
 </script>
 
